@@ -5,7 +5,8 @@
 > <pre>python __main__.py</pre>
 ### Record Movements
 Click record to record a new movements  
-Hold left click and move your mouse in the green box, release the click when your movement is finished  
+Drag and drop the circles to move them around : it is the movement
+Once you release the click the movement is finished  
 Do this as many times as you want, every movement will be given the same output for training  
 Click stop recording when you recorded enough times this movement  
 You can then record another movement following the same process

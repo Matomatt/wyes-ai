@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QPen, QTransform
 from PyQt5.QtCore import Qt, QTimer
-from math import sqrt
+from math import sqrt, atan, cos, sin, pi
 import numpy as numpy
 
 ## Detecter le mouvement avec la variation des capteurs au lieu du clic
@@ -38,6 +38,7 @@ class App(QMainWindow):
         buttonRec = QPushButton('Record new movement', self)
         buttonRec.setToolTip('Start the recording of a new movement, do it multiple times to build the database')
         buttonRec.move(20,560)
+        buttonRec.resize(150, 30)
         buttonRec.clicked.connect(self.startRec)
         buttonStopRec = QPushButton('Stop recording', self)
         buttonStopRec.setToolTip('Stop the recording of the new movement')
@@ -59,6 +60,7 @@ class App(QMainWindow):
             captor.setPixmap(img)
             captor.move(self.positions[i*2]-5, self.positions[i*2+1]-5)
             captors.append(captor)
+        self.circles = [100,400,80, 300,250,200, 480,300,100]
         ##Timer
         self.sampleTimer=QTimer()
         self.sampleTimer.timeout.connect(self.sample)
@@ -68,6 +70,8 @@ class App(QMainWindow):
         painter = QPainter(self)
         painter.setPen(QPen(Qt.green, 2, Qt.SolidLine))
         painter.drawRect(20,20,600,500)
+        for i in range(0,3):
+            painter.drawEllipse(int(self.circles[i*3]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+1]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+2]), int(self.circles[i*3+2]))
 
     def startRec(self):
         self.statusBar().showMessage('Recording...')
@@ -79,7 +83,24 @@ class App(QMainWindow):
         self.recordedMovementsDB.append(self.recordedMovementListBuffer)
         self.statusBar().showMessage('Recording stopped')
 
+    def circleCollisions(self, i, j, distToMove):
+        if (sqrt( (self.circles[i*3]-self.circles[j*3])**2 + (self.circles[i*3+1]-self.circles[j*3+1])**2 ) < self.circles[i*3+2]/2+self.circles[j*3+2]/2):
+            dirVect = [self.circles[i*3]-self.circles[j*3], self.circles[i*3+1]-self.circles[j*3+1]]
+            angle=atan(dirVect[1]/dirVect[0])+(self.circles[i*3]>self.circles[j*3])*pi;
+            print ("%d %f°" % (distToMove, angle));
+            self.circles[j*3]+=distToMove*cos(angle);
+            self.circles[j*3+1]+=distToMove*sin(angle);
+
     def mouseMoveEvent(self, event):
+        for i in range(0, 3):
+            if (self.sampleMovement==True and sqrt( (event.x()-20-self.circles[i*3])**2 + (event.y()-20-self.circles[i*3+1])**2 ) < self.circles[i*3+2]/2):
+                self.circles[i*3]+=(event.x()-self.lastMousePosition[0]-20);
+                self.circles[i*3+1]+=(event.y()-self.lastMousePosition[1]-20);
+                for j in range(0,3):
+                    if (i!=j):
+                        self.circleCollisions(i,j,sqrt( (event.x()-self.lastMousePosition[0]-20)**2 + (event.y()-self.lastMousePosition[1]-20)**2 ));
+                        self.circleCollisions(j,3-(i+j),sqrt( (event.x()-self.lastMousePosition[0]-20)**2 + (event.y()-self.lastMousePosition[1]-20)**2 ));
+                self.update();
         self.lastMousePosition[0] = event.x()-20;
         self.lastMousePosition[1] = event.y()-20;
 
@@ -90,7 +111,7 @@ class App(QMainWindow):
         if e.buttons() == Qt.LeftButton:
             self.sampleMovement = True
             self.recordedMovementBuffer = []
-            self.sampleTimer.start(1000/self.sampleRate)
+            self.sampleTimer.start(int(1000/self.sampleRate))
 
     def mouseReleaseEvent(self, e):
         self.sampleMovement = False
@@ -106,7 +127,7 @@ class App(QMainWindow):
                 distances.append( sqrt( (sqrt((x-self.positions[i*2])**2) + sqrt((y-self.positions[i*2+1])**2))**2 ) )
             self.statusBar().showMessage(' '.join(map(str, distances)))
             self.recordedMovementBuffer.append(distances)
-            self.sampleTimer.start(1000/self.sampleRate)
+            self.sampleTimer.start(int(1000/self.sampleRate))
         else:
             self.sampleTimer.stop()
 
