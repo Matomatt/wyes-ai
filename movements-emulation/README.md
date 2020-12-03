@@ -14,5 +14,5 @@ You can then record another movement following the same process
 Don't forget to stop recording and once you're done click the Save to file button  
 All the recorded movement matrices are saved in the dataset.csv file  
 The file will be automatically overwritten so be careful
-##Nota Bene
+## Nota Bene
 If you record only one movement one time, the program will crash when saving :)
