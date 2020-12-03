@@ -49,18 +49,19 @@ class App(QMainWindow):
         buttonMakeFile.move(420,560)
         buttonMakeFile.clicked.connect(self.makeFile)
         ##Captors
-        self.positions = [150,0, 450,0, 625,250, 450,520, 150,520, 0,250]
-        rotation =  [0, 0, 90, 180, 180, 270]
+        self.captors = [150,0, 450,0, 625,250, 450,520, 150,520, 0,250]
+        self.rotation =  [0, 0, 90, 180, 180, 270]
         captors=[]
         for i in range(0,6):
             captor = QLabel(self)
             img = QPixmap('ir-detector-small.png')
-            transform = QTransform().rotate(rotation[i])
+            transform = QTransform().rotate(self.rotation[i])
             img = img.transformed(transform, Qt.SmoothTransformation)
             captor.setPixmap(img)
-            captor.move(self.positions[i*2]-5, self.positions[i*2+1]-5)
+            captor.move(self.captors[i*2]-5, self.captors[i*2+1]-5)
             captors.append(captor)
-        self.circles = [100,400,80, 300,250,200, 480,300,100]
+        self.circles = [100,400,150, 230,200,300, 480,300,226]
+        self.circlesInitPos = self.circles.copy()
         ##Timer
         self.sampleTimer=QTimer()
         self.sampleTimer.timeout.connect(self.sample)
@@ -87,7 +88,6 @@ class App(QMainWindow):
         if (sqrt( (self.circles[i*3]-self.circles[j*3])**2 + (self.circles[i*3+1]-self.circles[j*3+1])**2 ) < self.circles[i*3+2]/2+self.circles[j*3+2]/2):
             dirVect = [self.circles[i*3]-self.circles[j*3], self.circles[i*3+1]-self.circles[j*3+1]]
             angle=atan(dirVect[1]/dirVect[0])+(self.circles[i*3]>self.circles[j*3])*pi;
-            print ("%d %f°" % (distToMove, angle));
             self.circles[j*3]+=distToMove*cos(angle);
             self.circles[j*3+1]+=distToMove*sin(angle);
 
@@ -117,14 +117,26 @@ class App(QMainWindow):
         self.sampleMovement = False
         if self.recordMovement:
             self.recordedMovementListBuffer.append(self.recordedMovementBuffer)
+            self.circles = self.circlesInitPos.copy()
+            self.update()
+            self.statusBar().showMessage('Movement saved, you can make it again to fill the dataset.')
 
     def sample(self):
         if self.sampleMovement == True:
-            distances=[]
-            x = self.lastMousePosition[0]
-            y = self.lastMousePosition[1]
+            distances=[600]*6
             for i in range(0,6):
-                distances.append( sqrt( (sqrt((x-self.positions[i*2])**2) + sqrt((y-self.positions[i*2+1])**2))**2 ) )
+                x = self.captors[i*2]-5
+                y = self.captors[i*2+1]-5
+                for j in range(0,3):
+                    cx=self.circles[j*3]+20
+                    cy=self.circles[j*3+1]+20
+                    cr=self.circles[j*3+2]/2
+                    angle=(self.rotation[i]-90)*pi/180
+                    vect=[int(cos(angle)), int(sin(angle))]
+                    if (abs(x-cx)<=cr and vect[1]!=0 or abs(y-cy)<=cr and vect[0]!=0):
+                        dist = (abs(y-cy) + sqrt(abs(cr**2-(x-cx)**2))*vect[0])*abs(vect[0]) + (abs(x-cx) + sqrt(abs(cr**2-(y-cy)**2))*vect[1])*abs(vect[1])
+                        if (abs(dist) < distances[i]):
+                            distances[i] = abs(int(dist))
             self.statusBar().showMessage(' '.join(map(str, distances)))
             self.recordedMovementBuffer.append(distances)
             self.sampleTimer.start(int(1000/self.sampleRate))
