@@ -15,6 +15,7 @@ Dans le domaine des statistiques multivariées, l'analyse en composantes princip
 - pour generer ce dataset, nous avons reproduis 4/5 mouvements dfférents plusieurs fois chacun , plus moins bien réalisées   
 #### Resultat :
 - nous avons découpé nos mouvements composé de 6 integer en 3 points. 
-[[https://github.com/Matomatt/wyes-ai/tree/KPCA/img/Figure_1.png|alt=fig1]]  
-- nous avons utilisé le modele KCPA pour résoudre ce probleme de classification 
-[[https://github.com/Matomatt/wyes-ai/tree/KPCA/img/Figure_2.png|alt=fig2]]  
+![alt text](https://github.com/Matomatt/wyes-ai/tree/KPCA/img/Figure_1.png)
+- nous avons utilisé le modele KCPA pour résoudre ce probleme de classification
+![alt text](https://github.com/Matomatt/wyes-ai/tree/KPCA/img/Figure_2.png) 
+
