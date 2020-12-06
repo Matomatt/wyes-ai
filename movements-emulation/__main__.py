@@ -19,11 +19,13 @@ class App(QMainWindow):
         self.top = 10
         self.width = 640
         self.height = 640
+        self.FPS=60
         ##Movements recording
         self.lastMousePosition=[None, None]
         self.recordMovement = False;
         self.sampleMovement = False;
         self.sampleRate = 20
+        self.counter = 0
         self.recordedMovementBuffer = []
         self.recordedMovementListBuffer = []
         self.recordedMovementsDB = []
@@ -65,6 +67,11 @@ class App(QMainWindow):
         ##Timer
         self.sampleTimer=QTimer()
         self.sampleTimer.timeout.connect(self.sample)
+        self.updateTimer=QTimer()
+        self.updateTimer.timeout.connect(self.paintUpdate)
+        self.updateTimer.start(int(1000/self.FPS))
+        self.countTimer=QTimer()
+        self.countTimer.timeout.connect(self.timerRec)
         self.show()
 
     def paintEvent(self, e):
@@ -73,14 +80,40 @@ class App(QMainWindow):
         painter.drawRect(20,20,600,500)
         for i in range(0,3):
             painter.drawEllipse(int(self.circles[i*3]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+1]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+2]), int(self.circles[i*3+2]))
+        if self.sampleMovement == True:
+            painter.setPen(QPen(Qt.red, 0, Qt.SolidLine))
+            painter.setBrush(Qt.red);
+            painter.drawEllipse(180,570,10,10)
+
+    def paintUpdate(self):
+        self.update();
+
+    def timerRec(self):
+        self.sampleMovement = not self.sampleMovement;
+        if self.sampleMovement:
+            if self.recordMovement == False:
+                self.sampleMovement = False
+                return
+            self.recordedMovementBuffer = []
+            self.sampleTimer.start(int(1000/self.sampleRate))
+            self.countTimer.start(1200)
+        else:
+            if self.recordMovement:
+                self.countTimer.stop()
+                self.sampleTimer.stop()
+                self.recordedMovementListBuffer.append(self.recordedMovementBuffer)
+                self.circles = self.circlesInitPos.copy()
+                self.statusBar().showMessage('Movement saved, you can make it again to fill the dataset.')
 
     def startRec(self):
         self.statusBar().showMessage('Recording...')
         self.recordedMovementListBuffer = []
-        self.recordMovement = True
+        self.recordMovement = True;
 
     def stopRec(self):
-        self.recordMovement = False
+        if self.sampleMovement == True:
+            return
+        self.recordMovement = False;
         self.recordedMovementsDB.append(self.recordedMovementListBuffer)
         self.statusBar().showMessage('Recording stopped')
 
@@ -100,26 +133,20 @@ class App(QMainWindow):
                     if (i!=j):
                         self.circleCollisions(i,j,sqrt( (event.x()-self.lastMousePosition[0]-20)**2 + (event.y()-self.lastMousePosition[1]-20)**2 ));
                         self.circleCollisions(j,3-(i+j),sqrt( (event.x()-self.lastMousePosition[0]-20)**2 + (event.y()-self.lastMousePosition[1]-20)**2 ));
-                self.update();
         self.lastMousePosition[0] = event.x()-20;
         self.lastMousePosition[1] = event.y()-20;
 
     def mousePressEvent(self, e):
-        if self.recordMovement == False:
-            self.sampleMovement = False
-            return
-        if e.buttons() == Qt.LeftButton:
-            self.sampleMovement = True
-            self.recordedMovementBuffer = []
-            self.sampleTimer.start(int(1000/self.sampleRate))
+        self.sampleMovement = False;
+        self.timerRec()
 
-    def mouseReleaseEvent(self, e):
-        self.sampleMovement = False
-        if self.recordMovement:
-            self.recordedMovementListBuffer.append(self.recordedMovementBuffer)
-            self.circles = self.circlesInitPos.copy()
-            self.update()
-            self.statusBar().showMessage('Movement saved, you can make it again to fill the dataset.')
+    # def mouseReleaseEvent(self, e):
+    #     self.sampleMovement = False
+    #     if self.recordMovement:
+    #         self.recordedMovementListBuffer.append(self.recordedMovementBuffer)
+    #         self.circles = self.circlesInitPos.copy()
+    #         self.update()
+    #         self.statusBar().showMessage('Movement saved, you can make it again to fill the dataset.')
 
     def sample(self):
         if self.sampleMovement == True:
@@ -139,7 +166,6 @@ class App(QMainWindow):
                             distances[i] = abs(int(dist))
             self.statusBar().showMessage(' '.join(map(str, distances)))
             self.recordedMovementBuffer.append(distances)
-            self.sampleTimer.start(int(1000/self.sampleRate))
         else:
             self.sampleTimer.stop()
 
