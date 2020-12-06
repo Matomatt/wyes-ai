@@ -15,7 +15,7 @@ Dans le domaine des statistiques multivariées, l'analyse en composantes princip
 - pour generer ce dataset, nous avons reproduis 4/5 mouvements dfférents plusieurs fois chacun , plus moins bien réalisées   
 #### Resultat :
 - nous avons découpé nos mouvements composé de 6 integer en 3 points. 
-![alt text](Figure_1.png)
+- ![alt text](Figure_1.png)
 - nous avons utilisé le modele KCPA pour résoudre ce probleme de classification
-![alt text](Figure_2.png) 
+- ![alt text](Figure_2.png) 
 
