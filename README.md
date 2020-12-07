@@ -19,4 +19,8 @@ Dans le domaine des statistiques multivariées, l'analyse en composantes princip
 - nous avons utilisé le modele KCPA pour résoudre ce probleme de classification
 ![alt text](Figure_2.png)
 > sur cet exemple nous pouvons distinguer 7 cluster différents ! 
+#### Roadmap :
+- Utiliser cette décomposition pour pouvoir distinguer chaque type de mouvement 
+- Mettre en place l'apprentissage
+- Optimiser le programme en mettant un typage et une écriture plus explicit **Cpython etc.**
 
