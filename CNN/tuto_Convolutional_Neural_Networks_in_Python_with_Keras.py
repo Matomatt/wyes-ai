@@ -12,6 +12,7 @@ import numpy as np
 from keras.utils import to_categorical
 import matplotlib.pyplot as plt
 from IPython import get_ipython
+%matplotlib inline
 
 (train_X,train_Y), (test_X,test_Y) = fashion_mnist.load_data()
 
