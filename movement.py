@@ -24,9 +24,12 @@ class Movement:
         self.array = None
     #----------------------------------------------------------------------
     def isEmpty(self) :
-        if self == None:
-            return True
-        else:
+        try:
+            if self.array == None:
+                return True
+            else:
+                return False
+        except:
             return False
     #----------------------------------------------------------------------
     def isInitialised(self):
@@ -38,7 +41,7 @@ class Movement:
     def readFromCsv(self,fileName):
         data = pd.read_csv(fileName, header = None)
         data = data.to_numpy() # transform in 2 dimensional matrix
-        arr = np.zeros((6, 10, 19, 6)) # create a 3x10x19x6 matrix
+        arr = np.zeros((int(2*self.numberOfMovements),self.numberOfRepetitions,self.numberOfSeconds,int(self.numberOfSensors/2))) # create a 3x10x19x6 matrix
         el = data[0][0]
         for typemouv in range(6):
             i = 0
@@ -52,7 +55,7 @@ class Movement:
                                                                     # posis = sample of positions for 1.2s
                                                                     # cap = output for each captor at specific times
                         i = i+1
-        arr_final = np.zeros((3, 10, 18, 12))
+        arr_final = np.zeros((self.numberOfMovements, self.numberOfRepetitions,self.numberOfSeconds,self.numberOfSensors))
         for i in range(0,len(arr_final)):
             for j in range(0,len(arr[i])):
                 for k in range(0,len(arr[i][j])-1):
@@ -61,6 +64,7 @@ class Movement:
                         arr_final[i][j][k][l+6] = arr[i+3][j][k][l]
 
         self.array = arr_final
+        self.update()
     #----------------------------------------------------------------------
     def setLabel(self,colors,nombre):
         patchs = []
@@ -132,7 +136,7 @@ class Movement:
                 plt.close()
     #----------------------------------------------------------------------
     def describe(self):
-        print("*"*70)
+        print("*"*60)
         if self.isInitialised() :
             print("Number of movements  : \033[1m{}\033[0m\tNumber of repetitions : \033[1m{}\033[0m".format(self.numberOfMovements,
                                                                             self.numberOfRepetitions))
@@ -155,11 +159,28 @@ class Movement:
     def dimensionReduction(self,dimension1,dimension2):
         print("dimension reduction between sensor n°{} and n°{}".format(dimension1,dimension2))
         kernel_pca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
-        X_kernel_pca = kernel_pca.fit_transform(self.array)
+        """
+        #we create a new array with the new size
+        newArr = np.zeros((self.numberOfMovements,self.numberOfRepetitions,self.numberOfSeconds,self.numberOfSensors-1))
+        #we copy the array except the dimension1 and dimension 2 column
+        for i in range(len(self.array)):
+            for j in range(len(self.array[i])):
+                for k in range(len(self.array[i][j])):
+                    compteur = 0
+                    for l in range(len(self.array[i][j][k])):
+                        if l != int(dimension1) and l != int(dimension2):
+                            newArr[i][j][k][compteur] = self.array[i][j][k][l]
+                            compteur = compteur + 1
+        #need to be an array (2x2) in parameter
+        X_kernel_pca = kernel_pca.fit_transform([self.array[0][0][0][dimension1],self.array[0][0][0][dimension2]])
         print(X_kernel_pca)
+        """
     #----------------------------------------------------------------------
     def update(self):
-        print("a faire ")
+        self.numberOfMovements = len(self.array)
+        self.numberOfRepetitions = len(self.array[0])
+        self.numberOfSeconds = len(self.array[0][0])
+        self.numberOfSensors = len(self.array[0][0][0])
     #----------------------------------------------------------------------
 
 
