@@ -2,7 +2,7 @@
 
 Ce petit write up fait suite à celui sur la découverte des KPCA disponible sur le dépot github **[ici](https://github.com/Matomatt/wyes-ai/tree/KPCA/Decouverte_KPCA)**. 
 ## Sommaire
-* [1. Notre problème ](#1-notre-projet)
+* [1. Notre problème ](#1-notre-problème)
 * [2. Les réductions de dimensionnalité](#2-les-réductions-de-dimensionalité)
 * [3. Reduction d'une dimension](#3-réduction-dune-dimension)
 * [4. Reduction de deux dimensions](#4-réduction-de-deux-dimensions)
