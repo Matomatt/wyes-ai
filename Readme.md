@@ -33,5 +33,10 @@ Afin d'optimiser et de simplifier notre démarche de reconnaissance et d'identif
 ## 7. Reduction de cinq dimensions
 
 ## 8. Notre code
+L'integralité du code se situe dans la classe [movement](movement.py). Le playload qui nous a permis de generer les images de ce write up est disponible dans le fichier [playload](playload.py)
+Plusieurs méthodes ont été implémenter dans la classe **movement** : 
+* Le constructeurs et les méthodes d'initialisation (tel que la lecture du dataset)
+* Les methodes permettant de generer une visualition graphique des mouvement en fonction des capteurs etc.
+* La méthode qui permet de "fusionner" deux capteurs afin de réduire le nombre de dimension
 
 ## 9. Conclusion
