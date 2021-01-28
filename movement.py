@@ -158,6 +158,9 @@ class Movement:
         X_kernel_pca = kernel_pca.fit_transform(self.array)
         print(X_kernel_pca)
     #----------------------------------------------------------------------
+    def update(self):
+        print("a faire ")
+    #----------------------------------------------------------------------
 
 
     

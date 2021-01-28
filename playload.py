@@ -1,22 +1,14 @@
-
-import pandas as pd
-import numpy as np
-import re
-import matplotlib.patches as mpatches
-import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-from sklearn.decomposition import KernelPCA
 from movement import Movement
 
-
-def kpca(arr):
-    kernel_pca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
-    X_kernel_pca = kernel_pca.fit_transform(arr)
-    return arr
-
-m = Movement(3,10,18,12)
-m.readFromCsv("datasetbis.csv")
-m.saveFigSensorsByMovements()
+#debut du playload
+print("*"*25 + " Playload " + "*"*25)
+#on instance notre objet
+m = Movement(3,10,18,12)  
+#on lui indique le dataset à aller recuperer
+m.readFromCsv("datasetbis.csv") 
+#on affiche les graphes des capteurs en fonction des mouvements
+#m.saveFigSensorsByMovements() 
+#on reduit la dimensionnalité 1 avec la dimensionnalité 2
 #m.dimensionReduction(1,2)
+#on affiche sur la console les caracteristiques de notre objet de type movement
 m.describe()
