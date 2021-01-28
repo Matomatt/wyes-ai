@@ -1,31 +1,49 @@
-print("First neural network with keras\nImporting libraries...");
+"""
+https://github.com/PacktPublishing/Python-Machine-Learning-Cookbook/tree/master/Chapter10
+"""
 
-from numpy import loadtxt
-from keras.models import Sequential
-from keras.layers import Dense
+import numpy as np
+import pandas as pd
+import re
+import matplotlib.pyplot as plt
+from sklearn.decomposition import KernelPCA
+from sklearn.datasets import make_circles
+import csv
 
-print("Libraries loaded.\nLoading dataset...");
+################################################################################
+def kpca(arr):
+    kernel_pca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
+    X_kernel_pca = kernel_pca.fit_transform(arr)
 
-dataset = loadtxt('pima-indians-diabetes.data.csv', delimiter=',')
-# split into input (X) and output (y) variables
-X = dataset[:,0:8]
-y = dataset[:,8]
+    # Plot original data
+    plt.figure()
+    plt.title("Original data")
+    for ele in arr :
+        plt.plot(ele[0], ele[1], "ko", mfc='none')
 
-print("Dataset loaded.\nDefining the keras model...");
+    plt.xlabel("1st dimension")
+    plt.ylabel("2nd dimension")
 
-model = Sequential()
-model.add(Dense(12, input_dim=8, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+    # Plot Kernel PCA projection of the data
+    plt.figure()
+    for ele in arr :
+        plt.plot(X_kernel_pca[0], X_kernel_pca[1], "ko", mfc='none')
+    plt.title("Data transformed using Kernel PCA")
+    plt.xlabel("1st principal component")
+    plt.ylabel("2nd principal component")
 
-print("Model defined.\nCompiling the model...");
+    plt.show()
+################################################################################
+def readCsvSimulation():
+    data = pd.read_csv("dataset.csv")
+    arr = np.zeros((400,2))
+    i = 0
+    for el in data :
+        num = re.findall(r'\d+',str(el))
+        arr[int(i/2)][i %2] = num[0]
+        i = i+1
+    return arr
+################################################################################
+kpca(readCsvSimulation())
 
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-print("Model compiled.\nTraining...");
-
-model.fit(X, y, epochs=150, batch_size=10)
-
-print("Training omplete !\nLet's evaluate our network :");
-_, accuracy = model.evaluate(X, y)
-print('Accuracy: %.2f' % (accuracy*100))
