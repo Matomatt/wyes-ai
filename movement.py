@@ -72,7 +72,7 @@ class Movement:
             patchs.append(mpatches.Patch(color=colors[i], label = str(i)))
         return patchs
     #----------------------------------------------------------------------
-    def saveFigMovementsBySensor(self,directory = "images/FigMovementsBySensors/"):
+    def saveFigMovementsBySensor(self,directory = "images/FigMovementsBySensors/",prefix = ""):
         if self.isEmpty == True or self.isInitialised == True:
             print("movements object empty")
             return
@@ -92,17 +92,17 @@ class Movement:
                     axs[0].plot(capteur[l] ,marker='x',  c=colors[l])
                     axs[1].plot(capteur[l+6] ,marker='x',  c=colors[l])
                 axs[0].legend(handles=self.setLabel(colors,6))
-                fig.savefig(directory + 'rr_{}_{}.png'.format(i,j))
+                fig.savefig(directory + '{}{}_{}.png'.format(prefix,i,j))
                 fig.clf()
                 plt.close()
     #----------------------------------------------------------------------
-    def saveFigSensorsByMovements(self,directory = "images/FigSensorsByMovements/"):
+    def saveFigSensorsByMovements(self,directory = "images/FigSensorsByMovements/",prefix = ""):
         if self.isEmpty == True or self.isInitialised == True:
             print("movements object empty")
             return
         for i in range(self.numberOfMovements): 
             for l in range(int(self.numberOfSensors/2)): 
-                fig, axs = plt.subplots(1,2,figsize=(16,8))
+                fig, axs = plt.subplots(1,2,figsize=(14,6))
                 courbes_gauche = []        
                 courbes_droite = []
                 list_couleur = ["darkgreen", "gold", "coral", "magenta", "magenta", "cyan", "red", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
@@ -131,7 +131,7 @@ class Movement:
                 axs[0].legend()
                 
                 #creation des fichiers contenant les graphes
-                fig.savefig(directory +'rr_{}_{}.png'.format(i,l))
+                fig.savefig(directory + '{}{}_{}.png'.format(prefix,i,j))
                 fig.clf()
                 plt.close()
     #----------------------------------------------------------------------
@@ -156,25 +156,59 @@ class Movement:
             print()
         print()
     #----------------------------------------------------------------------
-    def dimensionReduction(self,dimension1,dimension2):
+    def getMovements(self):
+        movements = []
+        for i in range(len(self.array)): #3
+            for j in range(len(self.array[i])): #10
+                mov = np.zeros((int(self.numberOfSensors), int(self.numberOfSeconds))) #create array 12x19
+                for k in range(len(self.array[i][j])): #19
+                    for l in range(len(self.array[i][j][k])): #12
+                        mov[l][k] = str(self.array[i][j][k][l])
+                movements.append(mov) 
+        return movements # list of (3x10) 30 arrays of 12x19
+    #----------------------------------------------------------------------
+    def setMovements(self, movements):
+        print("to do") #maybe useless..
+        return
+    #----------------------------------------------------------------------
+    def dimensionReduction1(self,dimension1,dimension2):
+        """
         print("dimension reduction between sensor n°{} and n°{}".format(dimension1,dimension2))
+        kernel_pca = KernelPCA(kernel="rbf")
+        #step 1 : charge the array to merge 
+        mov = self.getMovements()
+        print(f'on envoie : move[{len(mov[0])}][{len(mov[0][0])}]')
+
+        X_kernel_pca = kernel_pca.fit_transform([np.array(mov[0][0]),np.array(mov[0][1])])
+        print(f'on recoit : Kernel_PCA[{len(X_kernel_pca)}][{len(X_kernel_pca[0])}]')
+        for el in X_kernel_pca:
+            print(f'-> {el}')
+        """
         kernel_pca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
-        """
-        #we create a new array with the new size
-        newArr = np.zeros((self.numberOfMovements,self.numberOfRepetitions,self.numberOfSeconds,self.numberOfSensors-1))
-        #we copy the array except the dimension1 and dimension 2 column
-        for i in range(len(self.array)):
-            for j in range(len(self.array[i])):
-                for k in range(len(self.array[i][j])):
-                    compteur = 0
-                    for l in range(len(self.array[i][j][k])):
-                        if l != int(dimension1) and l != int(dimension2):
-                            newArr[i][j][k][compteur] = self.array[i][j][k][l]
-                            compteur = compteur + 1
-        #need to be an array (2x2) in parameter
-        X_kernel_pca = kernel_pca.fit_transform([self.array[0][0][0][dimension1],self.array[0][0][0][dimension2]])
-        print(X_kernel_pca)
-        """
+        arr_ = self.getMovements()
+        arr = [arr_[0][0],arr_[0][1]]
+        print(len(arr))
+        X_kernel_pca = kernel_pca.fit_transform(arr)
+
+        # Plot original data
+        plt.figure()
+        plt.title("Original data")
+        for ele in arr :
+            plt.plot(ele[0], ele[1], "ko", mfc='none')
+
+        plt.xlabel("1st dimension")
+        plt.ylabel("2nd dimension")
+
+        # Plot Kernel PCA projection of the data
+        plt.figure()
+        for ele in arr :
+            plt.plot(X_kernel_pca[0], X_kernel_pca[1], "ko", mfc='none')
+        plt.title("Data transformed using Kernel PCA")
+        plt.xlabel("1st principal component")
+        plt.ylabel("2nd principal component")
+
+        plt.show()
+
     #----------------------------------------------------------------------
     def update(self):
         self.numberOfMovements = len(self.array)
