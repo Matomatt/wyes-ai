@@ -167,13 +167,21 @@ class Movement:
                 movements.append(mov) 
         return movements # list of (3x10) 30 arrays of 12x19
     #----------------------------------------------------------------------
-    def setMovements(self, movements): 
+    def setMovements(self, movements):
+        # to do 
+        """
+        #we need to set a new array
+        new_array = []
         for i in range(len(self.array)): #3
+            new_array1 = []
             for j in range(len(self.array[i])): #10
-                new_values = []
+                new_array2 = []
                 for k in range(len(self.array[i][j])): #19
-                    new_values.append(movements[i*j][k])
-                self.array[i][j] = new_values
+                    new_array2.append([movements[i*j][k]])
+            new_array.append(new_array1)
+        print(f' shape[{len(self.array)}][{len(self.array[0])}][{len(self.array[0][0])}][{len(self.array[0][0][0])}]')
+        self.array = new_array
+        """
     #----------------------------------------------------------------------
     def dimensionReductionExample(self,mouvement, dimensions, save=False, name="figure.png"):
         list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
