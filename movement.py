@@ -167,48 +167,56 @@ class Movement:
                 movements.append(mov) 
         return movements # list of (3x10) 30 arrays of 12x19
     #----------------------------------------------------------------------
-    def setMovements(self, movements):
-        print("to do") #maybe useless..
-        return
+    def setMovements(self, movements): 
+        for i in range(len(self.array)): #3
+            for j in range(len(self.array[i])): #10
+                new_values = []
+                for k in range(len(self.array[i][j])): #19
+                    new_values.append(movements[i*j][k])
+                self.array[i][j] = new_values
     #----------------------------------------------------------------------
     def dimensionReductionExample(self,mouvement, dimensions, save=False, name="figure.png"):
         list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
         array = self.getMovements()
-        df = pd.DataFrame({'capteur_0': array[mouvement][dimensions[0]],
-                           'capteur_1': array[mouvement][dimensions[1]]})
+        df = pd.DataFrame({'sensor_0': array[mouvement][dimensions[0]],
+                           'sensor_1': array[mouvement][dimensions[1]]})
         if(len(dimensions) > 2) :
             for j in range(2,len(dimensions)):
-                df["capteur_{}".format(j)] = array[mouvement][dimensions[j]]
+                df["sensor_{}".format(j)] = array[mouvement][dimensions[j]]
         pca = PCA(n_components=1)
         principalComponents = pca.fit_transform(df)
         plt.figure()
         plt.title(f"Réduction dimension mouvement n°{mouvement}, capteurs : {dimensions}")
         plt.plot(principalComponents,  c ='red')
         for i in range(len(dimensions)):
-            plt.plot(df['capteur_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
+            plt.plot(df['sensor_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
         plt.legend(handles=self.setLabel(list_couleurs,len(dimensions)))
         if save :
             plt.savefig('images/' + name)
         else :
             plt.show()
     #----------------------------------------------------------------------
-    def dimensionReduction(self,mouvement, dimensions):
-        list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+    def dimensionReduction(self):
         array = self.getMovements()
-        df = pd.DataFrame({'capteur_0': array[mouvement][dimensions[0]],
-                           'capteur_1': array[mouvement][dimensions[1]]})
-        if(len(dimensions) > 2) :
-            for j in range(2,len(dimensions)):
-                df["capteur_{}".format(j)] = array[mouvement][dimensions[j]]
-        pca = PCA(n_components=1)
-        principalComponents = pca.fit_transform(df)
-        plt.figure()
-        plt.title(f"Réduction dimension mouvement n°{mouvement}, capteurs : {dimensions}")
-        plt.plot(principalComponents,  c ='red')
-        for i in range(len(dimensions)):
-            plt.plot(df['capteur_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
-        plt.legend(handles=self.setLabel(list_couleurs,len(dimensions)))
-
+        new_array = []
+        for i in range(len(array)): #on parcourt les 30 mouv
+            df_left = pd.DataFrame({'_0': array[i][0],
+                            '_1': array[i][1],
+                            '_2': array[i][2],
+                            '_3': array[i][3],
+                            '_4': array[i][4],
+                            '_5': array[i][5]})
+            df_right = pd.DataFrame({'_0': array[i][6],
+                            '_1': array[i][7],
+                            '_2': array[i][8],
+                            '_3': array[i][9],
+                            '_4': array[i][10],
+                            '_5': array[i][11]})
+                            
+            pca = PCA(n_components=1)
+            new_array.append(pca.fit_transform(df_left) + pca.fit_transform(df_right))
+        self.setMovements(new_array)
+        self.update()
     #----------------------------------------------------------------------
     def update(self):
         self.numberOfMovements = len(self.array)

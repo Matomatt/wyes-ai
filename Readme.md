@@ -7,7 +7,7 @@ Ce petit write up fait suite à celui sur la découverte des KPCA disponible sur
   - [1. Notre problème](#1-notre-problème)
   - [2. Reduction d'une dimension](#2-reduction-dune-dimension)
   - [3. Reduction de deux dimensions](#3-reduction-de-deux-dimensions)
-  - [4. Reduction de cinq dimensions](#4-reduction-de-cinq-dimensions)
+  - [4. Reduction de quatre dimensions](#4-reduction-de-quatre-dimensions)
   - [5. Notre code](#5-notre-code)
   - [6. Resultat](#6-resultat)
 
@@ -16,7 +16,7 @@ La lecture des informations provenant du dispositif est composé de 12 capteurs 
 
 ![image n°1](images/image_1.png)
 
-> le graphique de gauche correspond aux 6 capteurs de gauche et le graphique de droite aux 6 capteurs situé à à droite. 
+> le graphique de gauche correspond aux 6 capteurs de gauche et le graphique de droite aux 6 capteurs situés à à droite. 
 
 Afin d'optimiser et de simplifier notre démarche de reconnaissance et d'identification des mouvements, nous **nous proposons de réduire un maximum le nombre de composantes disponibles**. Nous utiliserons ici le principe de réduction de dimensionnalités permise par les KPCA.   
 ## 2. Reduction d'une dimension
@@ -25,7 +25,7 @@ Afin d'optimiser et de simplifier notre démarche de reconnaissance et d'identif
 ## 3. Reduction de deux dimensions
 ![image n°3](images/figure2.png)
 > Ici nous avons "fait" fusionner la ligne des **capteurs 1 , 2 et 3** _(n°0 , n°1 et n°2)_ respectivement en jaune , vert  et en orange pour obtenir **la ligne en rouge** 
-## 4. Reduction de cinq dimensions
+## 4. Reduction de quatre dimensions
 ![image n°4](images/figure3.png)
 > Ici nous avons "fait" fusionner la ligne des **capteurs 1 , 2 ,3 , 4 et 5** _(n°0 , n°1 , n°2, n°3 , n°4 et n°5)_ respectivement en vert, jaune, orange, magenta, cyan et noir pour obtenir **la ligne en rouge** 
 ## 5. Notre code
