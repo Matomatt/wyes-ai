@@ -182,7 +182,7 @@ class Movement:
         pca = PCA(n_components=1)
         principalComponents = pca.fit_transform(df)
         plt.figure()
-        plt.title(f"Réduction 1 dimension pour le mouvement n°{mouvement} et les capteurs : {dimensions}")
+        plt.title(f"Réduction dimension mouvement n°{mouvement}, capteurs : {dimensions}")
         plt.plot(principalComponents,  c ='red')
         for i in range(len(dimensions)):
             plt.plot(df['capteur_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
@@ -191,6 +191,24 @@ class Movement:
             plt.savefig('images/' + name)
         else :
             plt.show()
+    #----------------------------------------------------------------------
+    def dimensionReduction(self,mouvement, dimensions):
+        list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+        array = self.getMovements()
+        df = pd.DataFrame({'capteur_0': array[mouvement][dimensions[0]],
+                           'capteur_1': array[mouvement][dimensions[1]]})
+        if(len(dimensions) > 2) :
+            for j in range(2,len(dimensions)):
+                df["capteur_{}".format(j)] = array[mouvement][dimensions[j]]
+        pca = PCA(n_components=1)
+        principalComponents = pca.fit_transform(df)
+        plt.figure()
+        plt.title(f"Réduction dimension mouvement n°{mouvement}, capteurs : {dimensions}")
+        plt.plot(principalComponents,  c ='red')
+        for i in range(len(dimensions)):
+            plt.plot(df['capteur_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
+        plt.legend(handles=self.setLabel(list_couleurs,len(dimensions)))
+
     #----------------------------------------------------------------------
     def update(self):
         self.numberOfMovements = len(self.array)
