@@ -36,11 +36,11 @@ def kpca(arr):
 ################################################################################
 def readCsvSimulation():
     data = pd.read_csv("dataset.csv")
-    arr = np.zeros((400,2))
+    arr = np.zeros((10000,2))
     i = 0
     for el in data :
         num = re.findall(r'\d+',str(el))
-        arr[int(i/2)][i %2] = num[0]
+        arr[int(i/2)][i%2] = num[0]
         i = i+1
     return arr
 ################################################################################

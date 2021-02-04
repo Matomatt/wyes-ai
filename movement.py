@@ -5,7 +5,8 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from sklearn.decomposition import KernelPCA
+from sklearn.decomposition import PCA, KernelPCA
+from sklearn.datasets import make_circles
 
 class Movement:
     #----------------------------------------------------------------------
@@ -136,7 +137,6 @@ class Movement:
                 plt.close()
     #----------------------------------------------------------------------
     def describe(self):
-        print("*"*60)
         if self.isInitialised() :
             print("Number of movements  : \033[1m{}\033[0m\tNumber of repetitions : \033[1m{}\033[0m".format(self.numberOfMovements,
                                                                             self.numberOfRepetitions))
@@ -171,44 +171,26 @@ class Movement:
         print("to do") #maybe useless..
         return
     #----------------------------------------------------------------------
-    def dimensionReduction1(self,dimension1,dimension2):
-        """
-        print("dimension reduction between sensor n°{} and n°{}".format(dimension1,dimension2))
-        kernel_pca = KernelPCA(kernel="rbf")
-        #step 1 : charge the array to merge 
-        mov = self.getMovements()
-        print(f'on envoie : move[{len(mov[0])}][{len(mov[0][0])}]')
-
-        X_kernel_pca = kernel_pca.fit_transform([np.array(mov[0][0]),np.array(mov[0][1])])
-        print(f'on recoit : Kernel_PCA[{len(X_kernel_pca)}][{len(X_kernel_pca[0])}]')
-        for el in X_kernel_pca:
-            print(f'-> {el}')
-        """
-        kernel_pca = KernelPCA(kernel="rbf", fit_inverse_transform=True, gamma=10)
-        arr_ = self.getMovements()
-        arr = [arr_[0][0],arr_[0][1]]
-        print(len(arr))
-        X_kernel_pca = kernel_pca.fit_transform(arr)
-
-        # Plot original data
+    def dimensionReductionExample(self,mouvement, dimensions, save=False, name="figure.png"):
+        list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+        array = self.getMovements()
+        df = pd.DataFrame({'capteur_0': array[mouvement][dimensions[0]],
+                           'capteur_1': array[mouvement][dimensions[1]]})
+        if(len(dimensions) > 2) :
+            for j in range(2,len(dimensions)):
+                df["capteur_{}".format(j)] = array[mouvement][dimensions[j]]
+        pca = PCA(n_components=1)
+        principalComponents = pca.fit_transform(df)
         plt.figure()
-        plt.title("Original data")
-        for ele in arr :
-            plt.plot(ele[0], ele[1], "ko", mfc='none')
-
-        plt.xlabel("1st dimension")
-        plt.ylabel("2nd dimension")
-
-        # Plot Kernel PCA projection of the data
-        plt.figure()
-        for ele in arr :
-            plt.plot(X_kernel_pca[0], X_kernel_pca[1], "ko", mfc='none')
-        plt.title("Data transformed using Kernel PCA")
-        plt.xlabel("1st principal component")
-        plt.ylabel("2nd principal component")
-
-        plt.show()
-
+        plt.title(f"Réduction 1 dimension pour le mouvement n°{mouvement} et les capteurs : {dimensions}")
+        plt.plot(principalComponents,  c ='red')
+        for i in range(len(dimensions)):
+            plt.plot(df['capteur_{}'.format(i)],alpha=0.4, c =list_couleurs[i])
+        plt.legend(handles=self.setLabel(list_couleurs,len(dimensions)))
+        if save :
+            plt.savefig('images/' + name)
+        else :
+            plt.show()
     #----------------------------------------------------------------------
     def update(self):
         self.numberOfMovements = len(self.array)
