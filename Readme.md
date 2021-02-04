@@ -9,6 +9,7 @@ Ce petit write up fait suite à celui sur la découverte des KPCA disponible sur
   - [3. Reduction de deux dimensions](#3-reduction-de-deux-dimensions)
   - [4. Reduction de cinq dimensions](#4-reduction-de-cinq-dimensions)
   - [5. Notre code](#5-notre-code)
+  - [6. Resultat](#6-resultat)
 
 ## 1. Notre problème
 La lecture des informations provenant du dispositif est composé de 12 capteurs (6 pour le coté gauche et 6 autres pour le cotés droit) ce qui nous offres un mouvement un décrit par **6 dimensionalités** pour chaque œil.
@@ -34,3 +35,6 @@ Plusieurs méthodes ont été implémentés dans la classe **movement** :
 * Le constructeurs et les méthodes d'initialisation (tel que la lecture du dataset)
 * Les methodes permettant de generer une visualition graphique des mouvements en fonction des capteurs et etc.
 * La méthode **dimensionReduction** qui permet de "fusionner" deux capteurs afin de réduire le nombre de dimensions
+## 6. Resultat 
+![image n°5](images/figure4.png)
+
