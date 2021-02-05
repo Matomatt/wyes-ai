@@ -37,4 +37,8 @@ Plusieurs méthodes ont été implémentés dans la classe **movement** :
 * La méthode **dimensionReduction** qui permet de "fusionner" deux capteurs afin de réduire le nombre de dimensions
 ## 6. Resultat 
 ![image n°5](images/figure4.png)
-
+Mais est-ce que cette reduction de dimensionalité ne rend-elle pas impossible l'identification d'un mouvement par rapport à un autre. Pour en etre en sur, nous allons superposé differentes courbes d'un même mouvment sur un graphe et différentes coubres de différents mouvements sur un autre. 
+![image n°6](images/figure4.png)
+* Notre conclusion : 
+* * la réduction de dimensionalité n'entraine pas une perte d'information pour notre tache d'identification des mouvements. 
+* * Cependant ce processus peut-être energivore en terme de ressource et de temps de calcul. 
