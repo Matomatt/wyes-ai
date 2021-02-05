@@ -70,7 +70,10 @@ class Movement:
     def setLabel(self,colors,nombre):
         patchs = []
         for i in range(nombre):
-            patchs.append(mpatches.Patch(color=colors[i], label = str(i)))
+            try:
+                patchs.append(mpatches.Patch(color=colors[i], label = str(i)))
+            except:
+                continue
         return patchs
     #----------------------------------------------------------------------
     def saveFigMovementsBySensor(self,directory = "images/FigMovementsBySensors/",prefix = ""):
@@ -88,11 +91,13 @@ class Movement:
                 for k in range(len(self.array[i][j])): #k  le temps
                     for l in range(int(self.numberOfSensors/2)): # les capteurs
                         capteur[l].append(self.array[i][j][k][l])
-                        capteur[int(self.numberOfSensors/2)+l].append(self.array[i][j][k][l+6])
+                        capteur[int(self.numberOfSensors/2)+l].append(self.array[i][j][k][l+int(self.numberOfSensors/2)])
                 for l in range(int(self.numberOfSensors/2)):
                     axs[0].plot(capteur[l] ,marker='x',  c=colors[l])
-                    axs[1].plot(capteur[l+6] ,marker='x',  c=colors[l])
-                axs[0].legend(handles=self.setLabel(colors,6))
+                    axs[1].plot(capteur[l+int(self.numberOfSensors/2)] ,marker='x',  c=colors[l])
+                axs[0].legend(handles=self.setLabel(colors,int(self.numberOfSensors/2)))
+                axs[0].set_title("essai : %s gauche" % (j + 1))            
+                axs[1].set_title("essai : %s droit" % (j + 1))
                 fig.savefig(directory + '{}{}_{}.png'.format(prefix,i,j))
                 fig.clf()
                 plt.close()
@@ -168,20 +173,20 @@ class Movement:
         return movements # list of (3x10) 30 arrays of 12x19
     #----------------------------------------------------------------------
     def setMovements(self, movements):
-        # to do 
-        """
-        #we need to set a new array
-        new_array = []
-        for i in range(len(self.array)): #3
-            new_array1 = []
-            for j in range(len(self.array[i])): #10
-                new_array2 = []
-                for k in range(len(self.array[i][j])): #19
-                    new_array2.append([movements[i*j][k]])
-            new_array.append(new_array1)
-        print(f' shape[{len(self.array)}][{len(self.array[0])}][{len(self.array[0][0])}][{len(self.array[0][0][0])}]')
-        self.array = new_array
-        """
+        new_array = np.zeros((      int(self.numberOfMovements), 
+                                    int(self.numberOfRepetitions),
+                                    int(self.numberOfSeconds),
+                                    int(len(movements[0][0]))))
+        for i in range(len(new_array)):
+            for j in range(len(new_array[i])):
+                for k in range(len(new_array[i][j])):
+                    for l in range(len(new_array[i][j][k])):
+                        """
+                        PROBLEME A CE NIVEAU LA .....
+                        fausse tout ... a regler d'urgence 
+                        """
+                        #new_array[i][j][k][l] = movements[i*j][k][l]
+        self.array = new_array   
     #----------------------------------------------------------------------
     def dimensionReductionExample(self,mouvement, dimensions, save=False, name="figure.png"):
         list_couleurs = ["darkgreen", "gold", "coral", "magenta",  "cyan", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
@@ -204,25 +209,24 @@ class Movement:
         else :
             plt.show()
     #----------------------------------------------------------------------
-    def dimensionReduction(self):
+    def dimensionReduction(self,numberOfDimension = 1):
         array = self.getMovements()
         new_array = []
         for i in range(len(array)): #on parcourt les 30 mouv
-            df_left = pd.DataFrame({'_0': array[i][0],
-                            '_1': array[i][1],
-                            '_2': array[i][2],
-                            '_3': array[i][3],
-                            '_4': array[i][4],
-                            '_5': array[i][5]})
-            df_right = pd.DataFrame({'_0': array[i][6],
-                            '_1': array[i][7],
-                            '_2': array[i][8],
-                            '_3': array[i][9],
-                            '_4': array[i][10],
-                            '_5': array[i][11]})
-                            
-            pca = PCA(n_components=1)
-            new_array.append(pca.fit_transform(df_left) + pca.fit_transform(df_right))
+            df_left = pd.DataFrame({'_0': array[i][0],  '_1': array[i][1],  '_2': array[i][2],
+                                    '_3': array[i][3],  '_4': array[i][4],  '_5': array[i][5]})
+            df_right = pd.DataFrame({'_0': array[i][6], '_1': array[i][7],  '_2': array[i][8],
+                                    '_3': array[i][9],  '_4': array[i][10], '_5': array[i][11]})               
+            pca = PCA(n_components=numberOfDimension)
+            temp = []
+            L = pca.fit_transform(df_left)
+            R = pca.fit_transform(df_right)
+            for j in range(self.numberOfSeconds):
+                temp_b = []
+                temp_b.append(L[j])
+                temp_b.append(R[j])
+                temp.append(temp_b)
+            new_array.append(temp)
         self.setMovements(new_array)
         self.update()
     #----------------------------------------------------------------------

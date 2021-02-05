@@ -19,7 +19,7 @@ m.dimensionReductionExample(10,[0,1,2],save=True,name="figure2.png")
 #on reduit la dimensionnalité de 2 avec avec les capteurs 0, 1 ,2 ,3 , 4 et 5  pour le mouvement n°10 et on affiche le graphe
 m.dimensionReductionExample(10,[0,1,2,3,4,5],save=True,name="figure3.png")
 #on reduit la dimensionnalité de notre dataset au maximum pour ne laisser que deux dimensions (oeil gauche et oeil droit)
-m.dimensionReduction()
+m.dimensionReduction(numberOfDimension=3)
 #on affiche sur la console les caracteristiques de notre objet de type movement
 m.describe()
 #on affiche les graphes des capteurs en fonction des mouvements
