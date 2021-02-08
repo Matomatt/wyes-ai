@@ -21,6 +21,7 @@ m.dimensionReductionExample(10,[0,1,2],save=True,name="figure2.png")
 m.dimensionReductionExample(10,[0,1,2,3,4,5],save=True,name="figure3.png")
 #on reduit la dimensionnalité de notre dataset 
 """
+#on reduit la dimensionnalité de notre dataset 
 mov = m.dimensionReduction(numberOfDimension = 1)
 #on affiche la list des mouvements sur le même graphe pour savoir si on peut les différencier après la reduction
 showResult(mov, prefix ="red1")
@@ -28,4 +29,8 @@ showResult(mov, prefix ="red1")
 mov = m.dimensionReduction(numberOfDimension = 2)
 #on affiche la list des mouvements sur le même graphe pour savoir si on peut les différencier après la reduction
 showResult(mov, prefix ="red2")
+#on reduit la dimensionnalité de notre dataset 
+mov = m.dimensionReduction(numberOfDimension = 3)
+#on affiche la list des mouvements sur le même graphe pour savoir si on peut les différencier après la reduction
+showResult(mov, prefix ="red3")
 
