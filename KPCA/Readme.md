@@ -9,7 +9,8 @@ Ce petit write up fait suite à celui sur la découverte des KPCA disponible sur
   - [3. Reduction de deux dimensions](#3-reduction-de-deux-dimensions)
   - [4. Reduction de quatre dimensions](#4-reduction-de-quatre-dimensions)
   - [5. Notre code](#5-notre-code)
-  - [6. Resultat](#6-resultat)
+  - [6. Resultats](#6-resultats)
+      - [Notre conclusion :](#notre-conclusion-)
 
 ## 1. Notre problème
 La lecture des informations provenant du dispositif est composé de 12 capteurs (6 pour le coté gauche et 6 autres pour le cotés droit) ce qui nous offres un mouvement un décrit par **6 dimensionalités** pour chaque œil.
@@ -35,10 +36,21 @@ Plusieurs méthodes ont été implémentés dans la classe **movement** :
 * Le constructeurs et les méthodes d'initialisation (tel que la lecture du dataset)
 * Les methodes permettant de generer une visualition graphique des mouvements en fonction des capteurs et etc.
 * La méthode **dimensionReduction** qui permet de "fusionner" deux capteurs afin de réduire le nombre de dimensions
-## 6. Resultat 
+## 6. Resultats
+* Nous allons ici prendre le mouvement n°10 et le comparer aux autres pour savoir si cette reduction de dimensionalité ne rend pas impossible l'identification d'un mouvement par rapport à un autre. Nous obtenons la figure ci-dessous via les lignes `mov = m.dimensionReduction(numberOfDimension = 1)` et `showResult(mov)`.
 ![image n°5](images/figure4.png)
-Mais est-ce que cette reduction de dimensionalité ne rend-elle pas impossible l'identification d'un mouvement par rapport à un autre. Pour en etre en sur, nous allons superposé differentes courbes d'un même mouvment sur un graphe et différentes coubres de différents mouvements sur un autre. 
-![image n°6](images/figure4.png)
-* Notre conclusion : 
+> mouvement n°10 avec 1 dimension
+![image n°6](images/figure5.png)
+> mouvement n°12 avec 1 dimension **(même mouvement mais répétition différente)**
+![image n°7](images/figure6.png)
+> mouvement n°21 avec 1 dimension **(mouvement différents)**
+* Nous allons effectuer la même démarche mais avec cette fois-ci **2 dimension** via les lignes `mov = m.dimensionReduction(numberOfDimension = 2)` et `showResult(mov)` 
+![image n°8](images/figure7.png)
+> mouvement n°10 avec 2 dimensions
+![image n°9](images/figure8.png)
+> mouvement n°12 avec 2 dimensions **(même mouvement mais répétition différente)**
+![image n°10](images/figure9.png)
+> mouvement n°21 avec 2 dimensions **(mouvement différents)**
+#### Notre conclusion : 
 * * la réduction de dimensionalité n'entraine pas une perte d'information pour notre tache d'identification des mouvements. 
 * * Cependant ce processus peut-être energivore en terme de ressource et de temps de calcul. 
