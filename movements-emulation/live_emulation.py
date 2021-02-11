@@ -169,11 +169,15 @@ class App(QMainWindow):
 
 
     def initProcessing(self):
-        self.processingCallInterval = 100
-        self.record = [[0]*12]*40;
+        self.processingCallInterval = 50
+        self.numberOfSamples = 80
+        self.record = [[0]*12]*self.numberOfSamples;
         self.processingLastSample = [0]*12
-        self.counter = 40
+        self.counter = self.numberOfSamples
         self.counterPrefix = 0
+        self.tresMin = 20
+        self.tresMax = 400
+
 
     def processing(self): #called every processingCallInterval ms
         record = self.record[1:]
@@ -183,30 +187,34 @@ class App(QMainWindow):
             arr[i] = self.getLastSampledValues()[i] - self.processingLastSample[i]
         record.append(arr)
 
-
         self.record = record[0:]
-
-
         self.processingLastSample = self.getLastSampledValues()[0:]
-
-        print(self.record)
 
         self.counter-=1
         if (self.counter<=0):
-            saveFigMovementsBySensor(record, "images", self.counterPrefix)
-            self.counter=40
+            saveFigMovementsBySensor(record, "allcaptors", self.counterPrefix, self.numberOfSamples)
+            saveFigMovementsSummed(record, "summed", self.counterPrefix, self.numberOfSamples)
+            print("graphs saved")
+            self.counter=self.numberOfSamples
             self.counterPrefix +=1
 
-def saveFigMovementsBySensor(array, directory, prefix):
 
-    fig, axs = plt.subplots(1,2,figsize=(16,40))
+def saveFigMovementsBySensor(array, name, prefix, numberOfSamples):
 
-    list_couleur = ["darkgreen", "gold", "coral", "magenta", "magenta", "cyan", "red", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+    fig, axs = plt.subplots(1,2,figsize=(40,10))
 
-    gauche = array[0:][:6]
-    droit = array[0:][6:]
+    list_couleur = ["darkgreen", "gold", "coral", "magenta", "cyan", "red", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
 
-    print (gauche)
+    gauche = []
+    droit = []
+    for j in range(6):
+        g = []
+        d = []
+        for i in range(numberOfSamples):
+            g.append((array[i])[j])
+            d.append((array[i])[j])
+        gauche.append(g)
+        droit.append(d)
 
     #implementation des courbs dans les graphe
     for compteur in range(6):
@@ -223,10 +231,45 @@ def saveFigMovementsBySensor(array, directory, prefix):
     axs[0].legend()
 
     #creation des fichiers contenant les graphes
-    fig.savefig(directory + '{}.png'.format(prefix))
+    fig.savefig(name + '{}.png'.format(prefix))
     fig.clf()
     plt.close()
 
+def saveFigMovementsSummed(array, name, prefix, numberOfSamples):
+
+    fig, axs = plt.subplots(1,2,figsize=(40,10))
+
+    list_couleur = ["darkgreen", "gold", "coral", "magenta", "cyan", "red", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+
+    gauche = []
+    droit = []
+    for i in range(numberOfSamples):
+        gauche.append(0)
+        droit.append(0)
+        for j in range(6):
+            gauche[i] = abs(array[i][j])/6 + gauche[i]
+            droit[i] = abs(array[i][j])/6 + droit[i]
+
+    #oeil gauche
+    axs[0].plot(gauche, marker = 'x',  c = list_couleur[0], label = "courbe")
+
+    #oeil droit
+    axs[1].plot(droit, marker = 'x',  c = list_couleur[3])
+
+    axs[0].set_title("capteur gauche")
+    axs[1].set_title("capteur droit")
+
+    #pas de legend pour xs[1] car la elle est la meme que pour axs[0]
+    axs[0].legend()
+
+    #creation des fichiers contenant les graphes
+    fig.savefig(name + '{}.png'.format(prefix))
+    fig.clf()
+    plt.close()
+
+
+# Result :
+# Check all captors to find a significant variation that would mean the start of a movement
 
 
 
