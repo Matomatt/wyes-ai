@@ -5,6 +5,8 @@ from PyQt5.QtCore import Qt, QTimer
 from math import sqrt, atan, cos, sin, pi
 import numpy as np
 from sklearn import preprocessing
+import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 class App(QMainWindow):
 
@@ -170,7 +172,8 @@ class App(QMainWindow):
         self.processingCallInterval = 100
         self.record = [[0]*12]*40;
         self.processingLastSample = [0]*12
-        self.counter 
+        self.counter = 40
+        self.counterPrefix = 0
 
     def processing(self): #called every processingCallInterval ms
         record = self.record[1:]
@@ -188,7 +191,41 @@ class App(QMainWindow):
 
         print(self.record)
 
+        self.counter-=1
+        if (self.counter<=0):
+            saveFigMovementsBySensor(record, "images", self.counterPrefix)
+            self.counter=40
+            self.counterPrefix +=1
 
+def saveFigMovementsBySensor(array, directory, prefix):
+
+    fig, axs = plt.subplots(1,2,figsize=(16,40))
+
+    list_couleur = ["darkgreen", "gold", "coral", "magenta", "magenta", "cyan", "red", "black", "teal", "deepskyblue", "orange", "yellowgreen", "olive", "rosybrown", "silver", "gray", "peru"]
+
+    gauche = array[0:][:6]
+    droit = array[0:][6:]
+
+    print (gauche)
+
+    #implementation des courbs dans les graphe
+    for compteur in range(6):
+        #oeil gauche
+        axs[0].plot(gauche[compteur], marker = 'x',  c = list_couleur[compteur], label = "capt %s" % compteur)
+
+        #oeil droit
+        axs[1].plot(droit[compteur], marker = 'x',  c = list_couleur[compteur])
+
+    axs[0].set_title("capteur gauche")
+    axs[1].set_title("capteur droit")
+
+    #pas de legend pour xs[1] car la elle est la meme que pour axs[0]
+    axs[0].legend()
+
+    #creation des fichiers contenant les graphes
+    fig.savefig(directory + '{}.png'.format(prefix))
+    fig.clf()
+    plt.close()
 
 
 
