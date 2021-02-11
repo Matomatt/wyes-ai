@@ -170,7 +170,16 @@ class App(QMainWindow):
             self.sampleTimer.stop()
 
     def makeFile(self):
-        a = numpy.asarray(self.recordedMovementsDB, dtype=object)
+        print(self.recordedMovementsDB)
+        l = [];
+        for arr in self.recordedMovementsDB:
+            for arr1 in arr:
+                for arr2 in arr1:
+                    l.append(arr2);
+                l.append(['a','b','c','d','e','f'])
+            l.append(['g','h','i','j','k','l'])
+        a = numpy.asarray(l, dtype=object)
+        print(a.shape);
         numpy.savetxt("dataset.csv", a, fmt="%s")
         self.statusBar().showMessage('Saved successfully !')
 

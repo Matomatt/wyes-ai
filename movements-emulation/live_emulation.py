@@ -24,6 +24,8 @@ class App(QMainWindow):
         self.lastSample = [0]*12;
         self.circleSpeed = 1;
         self.selectedCircles=[False]*3
+        ##Processing
+        self.initProcessing();
         ##Init
         self.initUI()
         self.setMouseTracking(True)
@@ -55,6 +57,9 @@ class App(QMainWindow):
         self.updateTimer=QTimer()
         self.updateTimer.timeout.connect(self.paintUpdate)
         self.updateTimer.start(int(1000/self.FPS))
+        self.processingTimer=QTimer()
+        self.processingTimer.timeout.connect(self.processing)
+        self.processingTimer.start(self.processingCallInterval)
         self.show()
 
     def paintEvent(self, e):
@@ -142,8 +147,62 @@ class App(QMainWindow):
                         self.lastSample[i+6] = distances[i]
         self.statusBar().showMessage(' '.join(map(str, distances)))
 
-    def getLastSampledValues():
+    def getLastSampledValues(self):
         return self.lastSample
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def initProcessing(self):
+        self.processingCallInterval = 100
+        self.record = [[0]*12]*40;
+        self.processingLastSample = [0]*12
+        self.counter 
+
+    def processing(self): #called every processingCallInterval ms
+        record = self.record[1:]
+
+        arr = [0]*12
+        for i in range(len(arr)):
+            arr[i] = self.getLastSampledValues()[i] - self.processingLastSample[i]
+        record.append(arr)
+
+
+        self.record = record[0:]
+
+
+        self.processingLastSample = self.getLastSampledValues()[0:]
+
+        print(self.record)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
