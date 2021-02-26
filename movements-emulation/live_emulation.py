@@ -7,6 +7,7 @@ import numpy as np
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from datetime import datetime
 
 class App(QMainWindow):
 
@@ -16,8 +17,8 @@ class App(QMainWindow):
         self.title = 'Skin around the eyes movements simulation'
         self.left = 10
         self.top = 10
-        self.width = 640
-        self.height = 640
+        self.width = 1040
+        self.height = 1040
         self.FPS=60
         ##Sampling
         self.lastMousePosition=[None, None]
@@ -36,7 +37,7 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         ##Captors
-        self.captors = [150,0, 450,0, 625,250, 450,520, 150,520, 0,250]
+        self.captors = [333,0, 666,0, 1025,500, 666,1020, 333,1020, 0,500]
         self.rotation =  [0, 0, 90, 180, 180, 270]
         captors=[]
         for i in range(0,6):
@@ -47,7 +48,7 @@ class App(QMainWindow):
             captor.setPixmap(img)
             captor.move(self.captors[i*2]-5, self.captors[i*2+1]-5)
             captors.append(captor)
-        self.circles = [100,400,150, 230,200,300, 480,300,226]
+        self.circles = [200,640,200, 410,340,360, 750,480,280]
         self.circlesInitPos = self.circles.copy()
         ##Timers
         self.sampleTimer=QTimer()
@@ -59,15 +60,15 @@ class App(QMainWindow):
         self.updateTimer=QTimer()
         self.updateTimer.timeout.connect(self.paintUpdate)
         self.updateTimer.start(int(1000/self.FPS))
-        self.processingTimer=QTimer()
-        self.processingTimer.timeout.connect(self.processing)
-        self.processingTimer.start(self.processingCallInterval)
+        self.startProcessingTimer = QTimer()
+        self.startProcessingTimer.timeout.connect(self.startProcessing)
+        self.startProcessingTimer.start(self.processingStartAfter)
         self.show()
 
     def paintEvent(self, e):
         painter = QPainter(self)
         painter.setPen(QPen(Qt.green, 2, Qt.SolidLine))
-        painter.drawRect(20,20,600,500)
+        painter.drawRect(20,20,1020,1020)
         for i in range(0,3):
             painter.drawEllipse(int(self.circles[i*3]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+1]-self.circles[i*3+2]/2)+20, int(self.circles[i*3+2]), int(self.circles[i*3+2]))
 
@@ -143,6 +144,7 @@ class App(QMainWindow):
                 vect=[int(cos(angle)), int(sin(angle))]
                 if (abs(x-cx)<=cr and vect[1]!=0 or abs(y-cy)<=cr and vect[0]!=0):
                     dist = (abs(y-cy) + sqrt(abs(cr**2-(x-cx)**2))*vect[0])*abs(vect[0]) + (abs(x-cx) + sqrt(abs(cr**2-(y-cy)**2))*vect[1])*abs(vect[1])
+
                     if (abs(dist) < distances[i]):
                         distances[i] = abs(int(dist))
                         self.lastSample[i] = distances[i]
@@ -169,34 +171,53 @@ class App(QMainWindow):
 
 
     def initProcessing(self):
-        self.processingCallInterval = 50
-        self.numberOfSamples = 80
+        self.processingStartAfter = 500
+        self.processingCallInterval = 79
+        self.numberOfSamples = 19
         self.record = [[0]*12]*self.numberOfSamples;
         self.processingLastSample = [0]*12
         self.counter = self.numberOfSamples
         self.counterPrefix = 0
-        self.tresMin = 20
-        self.tresMax = 400
+        self.tresMin = 50
+        self.tresMax = 140
+        self.recording = False
+        self.keepingLastValues = 2
 
+    def startProcessing(self):
+        self.processingLastSample = self.getLastSampledValues()[0:]
+        self.processingTimer=QTimer()
+        self.processingTimer.timeout.connect(self.processing)
+        self.processingTimer.start(self.processingCallInterval)
+        self.startProcessingTimer.stop()
+        print("processing started")
 
     def processing(self): #called every processingCallInterval ms
         record = self.record[1:]
 
         arr = [0]*12
+        mean = 0
         for i in range(len(arr)):
             arr[i] = self.getLastSampledValues()[i] - self.processingLastSample[i]
+            mean += abs(arr[i])/len(arr)
         record.append(arr)
 
         self.record = record[0:]
         self.processingLastSample = self.getLastSampledValues()[0:]
 
-        self.counter-=1
-        if (self.counter<=0):
-            saveFigMovementsBySensor(record, "allcaptors", self.counterPrefix, self.numberOfSamples)
-            saveFigMovementsSummed(record, "summed", self.counterPrefix, self.numberOfSamples)
-            print("graphs saved")
-            self.counter=self.numberOfSamples
-            self.counterPrefix +=1
+
+        if (mean>=self.tresMin and mean <= self.tresMax and not self.recording):
+            print(mean)
+            self.recording = True
+
+        if (self.recording):
+            self.counter-=1
+            if (self.counter<=self.keepingLastValues):
+                saveFigMovementsBySensor(record, "allcaptors", self.counterPrefix, self.numberOfSamples)
+                saveFigMovementsSummed(record, "summed", self.counterPrefix, self.numberOfSamples)
+                print("graphs saved " + str(datetime.now()))
+                self.counter=self.numberOfSamples
+                self.counterPrefix +=1
+                self.recording = False
 
 
 def saveFigMovementsBySensor(array, name, prefix, numberOfSamples):
@@ -231,7 +252,7 @@ def saveFigMovementsBySensor(array, name, prefix, numberOfSamples):
     axs[0].legend()
 
     #creation des fichiers contenant les graphes
-    fig.savefig(name + '{}.png'.format(prefix))
+    fig.savefig(name + '{}.png'.format(str(datetime.now())))
     fig.clf()
     plt.close()
 
@@ -263,7 +284,8 @@ def saveFigMovementsSummed(array, name, prefix, numberOfSamples):
     axs[0].legend()
 
     #creation des fichiers contenant les graphes
-    fig.savefig(name + '{}.png'.format(prefix))
+    # fig.savefig(name + '{}.png'.format(prefix))
+    fig.savefig(name + '{}.png'.format(str(datetime.now())))
     fig.clf()
     plt.close()
 
