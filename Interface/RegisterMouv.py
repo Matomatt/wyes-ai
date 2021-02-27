@@ -9,6 +9,7 @@ class Regis(tk.Frame):
         super().__init__(master)
         self.master = master
         self.essai = 0
+        self.statut = True
         self.pack()
         self.newmouv()
 
@@ -28,7 +29,8 @@ class Regis(tk.Frame):
             self.t1.pack(side=tk.TOP)
             self.br.pack(side=tk.TOP)
 
-            self.bregis = tk.Button(self, text="Nouvel essai", command=self.progression)
+            if self.statut==True:
+                self.bregis = tk.Button(self, text="Nouvel essai : " + str(self.essai + 1), command=self.progression)
             self.bregis.pack(side=tk.TOP, pady=40)
 
         if self.essai==10:
@@ -41,16 +43,23 @@ class Regis(tk.Frame):
         mn.Mouvements(self)
 
     def progression(self):
-        self.progress = ttk.Progressbar(self, orient="horizontal",
-                                        length=240, mode="determinate")
-        self.progress.pack()
-        self.progress.start()
 
-        for i in range(12):
-            self.progress["value"] = i * 9
-            self.update()
-            time.sleep(0.1)
-        self.progress.stop()
+        if self.statut==True:
+            self.statut = False
+            self.progress = ttk.Progressbar(self, orient="horizontal",
+                                            length=240, mode="determinate")
+            self.progress.pack()
+            self.progress.start()
+
+            for i in range(12):
+                self.progress["value"] = i * 9
+                self.update()
+                time.sleep(0.1)
+                if i==11:
+                    self.statut=True
+            self.progress.stop()
+
+            self.essai = self.essai + 1
 
         # Appel pour lancer un essai
         # | | | | | | | | | | | | | | |
@@ -63,7 +72,6 @@ class Regis(tk.Frame):
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
 
-        self.essai = self.essai+1
 
         if self.essai<10:
             self.newmouv()
