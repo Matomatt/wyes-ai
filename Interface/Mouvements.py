@@ -1,6 +1,7 @@
 import tkinter as tk
 import Menu as mn
 import RegisterMouv as rm
+from RegisterMouv import Regis
 
 
 class Mouvements(tk.Frame):
@@ -21,9 +22,9 @@ class Mouvements(tk.Frame):
 
         mouvexist = self.nbMouv()
         # choix des mouvements
-        self.bm1 = tk.Button(self, text="Mouvement 1", width=33, height=45, command=self.enremouv)
-        self.bm2 = tk.Button(self, text="Mouvement 2", width=33, height=45, command=self.enremouv)
-        self.bm3 = tk.Button(self, text="Mouvement 3", width=33, height=45, command=self.enremouv)
+        self.bm1 = tk.Button(self, text="Mouvement 1", width=33, height=45, command=self.enremouv1)
+        self.bm2 = tk.Button(self, text="Mouvement 2", width=33, height=45, command=self.enremouv2)
+        self.bm3 = tk.Button(self, text="Mouvement 3", width=33, height=45, command=self.enremouv3)
 
         if mouvexist == 0:
             self.bm1.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
@@ -57,14 +58,32 @@ class Mouvements(tk.Frame):
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
         # V V V V V V V V V V V V V V V
-        return 2
+        return 3
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
 
-    def enremouv(self):
+    def enremouv1(self):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
-        rm.Regis(self)
+        tp = rm.Regis(self)
+        tp.quelmouv(1)
+        tp.newmouv()
+
+    def enremouv2(self):
+        # supression des widgets présents sur la fenêtre
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        tp = rm.Regis(self)
+        tp.quelmouv(2)
+        tp.newmouv()
+
+    def enremouv3(self):
+        # supression des widgets présents sur la fenêtre
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        tp = rm.Regis(self)
+        tp.quelmouv(3)
+        tp.newmouv()

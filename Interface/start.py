@@ -18,8 +18,13 @@ def main(root):
 
     # fonctionnalités fenêtre
     root.bind('<Key>', touche)
+    root.bind('<Button-1>', touche)
+    root.bind('<Button-2>', touche)
 
 def touche(event):
+    root.unbind('<Key>')
+    root.unbind('<Button-1>')
+    root.unbind('<Button-2>')
     # supression des widgets présents sur la fenêtre
     for widget in root.winfo_children():
         widget.pack_forget()
