@@ -1,6 +1,7 @@
 import tkinter as tk
 import Menu as mn
 import random
+import live_emulation as le
 
 
 class Controle(tk.Frame):
@@ -29,7 +30,7 @@ class Controle(tk.Frame):
             self.bm2 = tk.Button(self, text="Mouvement 2", width=33, height=10)
             self.bm3 = tk.Button(self, text="Mouvement 3", width=33, height=10)
 
-            mouv = self.whichMouv()
+            mouv = self.whichMouv(le.start())
 
             # Mouvement 1
             if(mouv==1):
@@ -64,7 +65,7 @@ class Controle(tk.Frame):
             self.bm3.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
 
         if self.co==True:
-            self.after(1200, self.cont)
+            self.after(100, self.cont)
 
     def retour(self):
         self.co = False
@@ -73,14 +74,17 @@ class Controle(tk.Frame):
             widget.pack_forget()
         mn.Menu(self)
 
-    def whichMouv(self):
+    def whichMouv(self, record):
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
         # V V V V V V V V V V V V V V V
+
+        print(record)
+
         return random.randint(1, 3)
+        
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
-
