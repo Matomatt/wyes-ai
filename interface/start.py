@@ -6,7 +6,7 @@ def main(root):
     # apparence fenêtre
     root.configure(bg='#f0f0f0')
     root.geometry("800x550")
-    root.wm_iconbitmap("Images/icone.ico")
+    # root.wm_iconbitmap("Images/icone.ico")
 
     # objets fenêtre
     t1 = tk.Label(root, text="Bienvenue sur votre logiciel de contrôle", justify=tk.CENTER, font=('Consolas', 25))
