@@ -75,35 +75,35 @@ class Regis(tk.Frame):
         self.newmouv()
         
     def training(self):
-    if self.statut == True:
-        self.statut = False
-        self.progress = ttk.Progressbar(self, orient="horizontal",
-                                        length=240, mode="determinate")
-        self.progress.pack()
-        self.progress.start()
+        if self.statut == True:
+            self.statut = False
+            self.progress = ttk.Progressbar(self, orient="horizontal",
+                                            length=240, mode="determinate")
+            self.progress.pack()
+            self.progress.start()
 
-        for i in range(12):
-            self.progress["value"] = i * 9
-            self.update()
-            time.sleep(0.1)
-            if i == 11:
-                self.statut = True
-        self.progress.stop()
+            for i in range(12):
+                self.progress["value"] = i * 9
+                self.update()
+                time.sleep(0.1)
+                if i == 11:
+                    self.statut = True
+            self.progress.stop()
 
-        # Appel pour lancer un essai
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        # V V V V V V V V V V V V V V V
-        
-        gv.recordedMovements[self.nummouv-1].append(le.start())
-        print(gv.recordedMovements[self.nummouv-1])
-        
-        # A A A A A A A A A A A A A A A
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        self.newmouv()
+            # Appel pour lancer un essai
+            # | | | | | | | | | | | | | | |
+            # | | | | CODES A MODIF | | | |
+            # | | | | | | | | | | | | | | |
+            # V V V V V V V V V V V V V V V
+
+            gv.recordedMovements[self.nummouv-1].append(le.start())
+            print(gv.recordedMovements[self.nummouv-1])
+
+            # A A A A A A A A A A A A A A A
+            # | | | | | | | | | | | | | | |
+            # | | | | CODES A MODIF | | | |
+            # | | | | | | | | | | | | | | |
+            self.newmouv()
 
     def progression(self):
         if self.statut==True:
