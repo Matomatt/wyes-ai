@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import Mouvements as mn
 import time
+import live_emulation as le
+import global_variables as gv
 
 
 class Regis(tk.Frame):
@@ -50,6 +52,10 @@ class Regis(tk.Frame):
     def quelmouv(self, idid):
         self.nummouv = idid
 
+        while (len(gv.recordedMovements) < idid):
+            print(str(idid) + " - " + str(len(gv.recordedMovements)))
+            gv.recordedMovements.append([])
+
 
     def recommencer(self):
         self.essai=0
@@ -88,6 +94,9 @@ class Regis(tk.Frame):
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
         # V V V V V V V V V V V V V V V
+
+        gv.recordedMovements[self.nummouv-1].append(le.start())
+        print(gv.recordedMovements[self.nummouv-1])
 
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |

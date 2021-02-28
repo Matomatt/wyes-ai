@@ -1,6 +1,7 @@
 import tkinter as tk
 from Controle import Controle
 from Mouvements import Mouvements
+import global_variables as gv
 
 
 class Menu(tk.Frame):
@@ -25,6 +26,7 @@ class Menu(tk.Frame):
         self.b2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
         self.b1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b2.pack(in_=self, side=tk.RIGHT, padx=10, pady=10)
+        print(gv.recordedMovements)
 
     def cont(self):
         # supression des widgets présents sur la fenêtre
