@@ -28,13 +28,15 @@ class Regis(tk.Frame):
             self.t1.pack(side=tk.TOP)
             self.br.pack(side=tk.TOP)
 
-            self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
-            self.bagain.configure(fg='lightgray', bg='#b30000')
-            self.bagain.pack(side=tk.BOTTOM, pady=120)
-
             if self.statut==True:
                 self.bregis = tk.Button(self, text="Nouvel essai : " + str(self.essai + 1) + "/10", command=self.progression)
             self.bregis.pack(side=tk.TOP, pady=20)
+            
+            self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
+            self.bagain.configure(fg='lightgray', bg='#b30000')
+            self.bagain.pack(side=tk.BOTTOM, pady=120)
+            
+            self.etape()
 
         if self.essai==10:
             self.retour
@@ -45,6 +47,71 @@ class Regis(tk.Frame):
         for widget in self.winfo_children():
             widget.pack_forget()
         mn.Mouvements(self)
+        
+    def etape(self):
+        if self.essai == 0:
+            self.ff = tk.Frame(self)
+            self.ff.l1 = tk.Label(self.ff, text="Essai n°1", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l1.configure(fg='black', bg='#d9d9d9')
+            self.ff.l2 = tk.Label(self.ff, text="Essai n°2", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l2.configure(fg='black', bg='#b3b3b3')
+            self.ff.l3 = tk.Label(self.ff, text="Essai n°3", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l3.configure(fg='black', bg='#b3b3b3')
+            self.ff.l4 = tk.Label(self.ff, text="Essai n°4", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l4.configure(fg='black', bg='#b3b3b3')
+            self.ff.l5 = tk.Label(self.ff, text="Essai n°5", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l5.configure(fg='black', bg='#b3b3b3')
+            self.ff.l6 = tk.Label(self.ff, text="Essai n°6", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l6.configure(fg='black', bg='#b3b3b3')
+            self.ff.l7 = tk.Label(self.ff, text="Essai n°7", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l7.configure(fg='black', bg='#b3b3b3')
+            self.ff.l8 = tk.Label(self.ff, text="Essai n°8", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l8.configure(fg='black', bg='#b3b3b3')
+            self.ff.l9 = tk.Label(self.ff, text="Essai n°9", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l9.configure(fg='black', bg='#b3b3b3')
+            self.ff.l10 = tk.Label(self.ff, text="Essai n°10", justify=tk.CENTER, font=('Consolas', 10))
+            self.ff.l10.configure(fg='black', bg='#b3b3b3')
+
+        if self.essai == 1:
+            self.ff.l2.configure(fg='black', bg='#d9d9d9')
+            self.ff.l1.configure(fg='black', bg='#009933')
+        if self.essai == 2:
+            self.ff.l3.configure(fg='black', bg='#d9d9d9')
+            self.ff.l2.configure(fg='black', bg='#009933')
+        if self.essai == 3:
+            self.ff.l4.configure(fg='black', bg='#d9d9d9')
+            self.ff.l3.configure(fg='black', bg='#009933')
+        if self.essai == 4:
+            self.ff.l5.configure(fg='black', bg='#d9d9d9')
+            self.ff.l4.configure(fg='black', bg='#009933')
+        if self.essai == 5:
+            self.ff.l6.configure(fg='black', bg='#d9d9d9')
+            self.ff.l5.configure(fg='black', bg='#009933')
+        if self.essai == 6:
+            self.ff.l7.configure(fg='black', bg='#d9d9d9')
+            self.ff.l6.configure(fg='black', bg='#009933')
+        if self.essai == 7:
+            self.ff.l8.configure(fg='black', bg='#d9d9d9')
+            self.ff.l7.configure(fg='black', bg='#009933')
+        if self.essai == 8:
+            self.ff.l9.configure(fg='black', bg='#d9d9d9')
+            self.ff.l8.configure(fg='black', bg='#009933')
+        if self.essai == 9:
+            self.ff.l10.configure(fg='black', bg='#d9d9d9')
+            self.ff.l9.configure(fg='black', bg='#009933')
+
+        self.ff.l10.pack(side=tk.RIGHT)
+        self.ff.l9.pack(side=tk.RIGHT)
+        self.ff.l8.pack(side=tk.RIGHT)
+        self.ff.l7.pack(side=tk.RIGHT)
+        self.ff.l6.pack(side=tk.RIGHT)
+        self.ff.l5.pack(side=tk.RIGHT)
+        self.ff.l4.pack(side=tk.RIGHT)
+        self.ff.l3.pack(side=tk.RIGHT)
+        self.ff.l2.pack(side=tk.RIGHT)
+        self.ff.l1.pack(side=tk.RIGHT)
+
+        self.ff.pack(side=tk.BOTTOM)
 
 
     def quelmouv(self, idid):
@@ -74,7 +141,7 @@ class Regis(tk.Frame):
             self.statut = False
             self.progress = ttk.Progressbar(self, orient="horizontal",
                                             length=240, mode="determinate")
-            self.progress.pack()
+            self.progress.pack(side=tk.BOTTOM, pady=20)
             self.progress.start()
 
             for i in range(12):
