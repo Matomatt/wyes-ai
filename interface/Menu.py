@@ -3,7 +3,6 @@ from Controle import Controle
 from Mouvements import Mouvements
 from MouvTraining import MouvTraining
 import global_variables as gv
-from CNN.payload import *
 import TrainMouv as rm
 
 class Menu(tk.Frame):

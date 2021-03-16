@@ -3,6 +3,7 @@ from tkinter import ttk
 import Menu
 import Menu as mn
 import time
+from CNN.payload import *
 
 
 class TrMouv(tk.Frame):
