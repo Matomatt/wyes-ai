@@ -12,7 +12,6 @@ class Regis(tk.Frame):
         self.master = master
         self.essai = 0
         self.nummouv = 0
-        self.statut = True
         self.pack()
 
     def newmouv(self):
@@ -28,8 +27,7 @@ class Regis(tk.Frame):
             self.t1.pack(side=tk.TOP)
             self.br.pack(side=tk.TOP)
 
-            if self.statut==True:
-                self.bregis = tk.Button(self, text="Nouvel essai : " + str(self.essai + 1) + "/10", command=self.progression)
+            self.bregis = tk.Button(self, text="Nouvel essai : " + str(self.essai + 1) + "/10", command=self.progression)
             self.bregis.pack(side=tk.TOP, pady=20)
             
             self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
@@ -137,22 +135,7 @@ class Regis(tk.Frame):
         self.newmouv()
         
     def progression(self):
-        if self.statut==True:
-            self.statut = False
-            self.progress = ttk.Progressbar(self, orient="horizontal",
-                                            length=240, mode="determinate")
-            self.progress.pack(side=tk.BOTTOM, pady=20)
-            self.progress.start()
-
-            for i in range(12):
-                self.progress["value"] = i * 9
-                self.update()
-                time.sleep(0.1)
-                if i==11:
-                    self.statut=True
-            self.progress.stop()
-
-            self.essai = self.essai + 1
+        self.essai = self.essai + 1
 
         # Appel pour lancer un essai
         # | | | | | | | | | | | | | | |

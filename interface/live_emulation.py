@@ -8,6 +8,8 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from datetime import datetime
+import serial
+import time
 
 class App(QMainWindow):
 
@@ -30,6 +32,10 @@ class App(QMainWindow):
         ##Processing
         self.initProcessing();
         ##Init
+        try:
+            self.esp = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=.1)
+        except:
+            self.esp = None
         self.initUI()
         self.setMouseTracking(True)
 
@@ -152,6 +158,18 @@ class App(QMainWindow):
         self.statusBar().showMessage(' '.join(map(str, distances)))
 
     def getLastSampledValues(self):
+        if (self.esp != None):
+            line = str(esp.readline())
+            line = line[2:len(line)-5]
+            info = line.split(", ")
+            liste = []
+            for i in info:
+                test = i
+                if(test.isdigit()) :
+                    liste.append(int(i))
+            print (self.lastSample, " vs ", liste)
+            return liste
+
         return self.lastSample
 
 
