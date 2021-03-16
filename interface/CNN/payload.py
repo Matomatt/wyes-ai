@@ -71,14 +71,23 @@ def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32): # 30 1
     n_timesteps, n_features, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 1
     model = Sequential()
 
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
-    model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(MaxPooling1D(pool_size=2))
+    model.add(Convolution2D(32, (3, 3), activation="relu", input_shape=(12,19,1)))
+    print (model.output_shape)
+
+    model.add(Convolution2D(32, (3, 3), activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Dropout(0.25))
+
     model.add(Flatten())
-    model.add(Dense(100, activation='relu'))
-    model.add(Dense(3, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.add(Dense(256, activation="relu"))
+    model.add(Dropout(0.3))
+    model.add(Dense(512, activation="relu"))
+    model.add(Dropout(0.6))
+    model.add(Dense(3, activation="softmax"))
+
+    model.compile(loss='categorical_crossentropy',
+                optimizer='adam',
+                metrics=['accuracy'])
     model.summary()
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
 
