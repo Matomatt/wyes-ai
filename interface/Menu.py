@@ -3,6 +3,7 @@ from Controle import Controle
 from Mouvements import Mouvements
 from MouvTraining import MouvTraining
 import global_variables as gv
+import TrainMouv as rm
 
 
 class Menu(tk.Frame):
@@ -48,4 +49,5 @@ class Menu(tk.Frame):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
-        MouvTraining(self)
+        tp = rm.TrMouv(self)
+        tp.newmouv()
