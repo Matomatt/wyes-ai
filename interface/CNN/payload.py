@@ -20,8 +20,8 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Dropout
-from keras.layers.convolutional import Conv1D
-from keras.layers.convolutional import MaxPooling1D
+from keras.layers.convolutional import Convolution2D
+from keras.layers.convolutional import MaxPooling2D
 from keras.utils import to_categorical
 
 
