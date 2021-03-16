@@ -38,42 +38,50 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
         else:
             y_test.append(int((i- i%number_of_movements)/number_of_movements))
             x_test.append(data[i])
+    try:
+        for i in range(len(x_train)):
+            for j in range(len(x_train[i])):
+                x_train[i][j] = x_train[i][j].tolist()
 
-    for i in range(len(x_train)):
-        for j in range(len(x_train[i])):
-            x_train[i][j] = x_train[i][j].tolist()
-
-    for i in range(len(x_test)):
-        for j in range(len(x_test[i])):
-            x_test[i][j] = x_test[i][j].tolist()
+        for i in range(len(x_test)):
+            for j in range(len(x_test[i])):
+                x_test[i][j] = x_test[i][j].tolist()
+    except:
+        print('',end='')
 
     x_train1 = []
-    for i in range(len(x_train)):
+    # 30 6 38
+    # 30 12 19
+    for i in range(len(x_train)): #30 12 19 
         x_train1.append(x_train[i][0])
-        x_train1[i].extend(x_train[i][1])
+        x_train1.append(x_train[i][1])
+        #x_train1[i].extend(x_train[i][1])
 
 
     x_test1 = []
     for i in range(len(x_test)):
         x_test1.append(x_test[i][0])
-        x_test1[i].extend(x_test[i][1])
+        x_test1.append(x_test[i][1])
+        #x_test1[i].extend(x_test[i][1])
 
     return x_train1 , y_train , x_test1, y_test
 
-def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32):
+def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32): # 30 12 19 
     print('create model function ')
     n_timesteps, n_features, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 1
     model = Sequential()
-    model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+
+    model.add(Conv2D(filters=64, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
     model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.2))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
     model.add(Dense(100, activation='relu'))
-    model.add(Dense(n_outputs, activation='softmax'))
+    model.add(Dense(3, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.summary()
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
+
     return model
 
 def loadData(nameFile = "CNN/datasetbis.csv"):

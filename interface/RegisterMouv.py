@@ -118,7 +118,7 @@ class Regis(tk.Frame):
         self.nummouv = idid
 
         while (len(gv.recordedMovements) < idid):
-            print(str(idid) + " - " + str(len(gv.recordedMovements)))
+            #print(str(idid) + " - " + str(len(gv.recordedMovements)))
             gv.recordedMovements.append([])
 
 
