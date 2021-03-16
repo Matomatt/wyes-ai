@@ -1,5 +1,5 @@
-from movement import Movement
-from movement import showResult
+from CNN.movement import Movement
+from CNN.movement import showResult
 
 
 from keras.models import Sequential
@@ -38,26 +38,26 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
         else:
             y_test.append(int((i- i%number_of_movements)/number_of_movements))
             x_test.append(data[i])
-    
+
     for i in range(len(x_train)):
         for j in range(len(x_train[i])):
             x_train[i][j] = x_train[i][j].tolist()
-            
+
     for i in range(len(x_test)):
         for j in range(len(x_test[i])):
             x_test[i][j] = x_test[i][j].tolist()
-    
+
     x_train1 = []
     for i in range(len(x_train)):
         x_train1.append(x_train[i][0])
         x_train1[i].extend(x_train[i][1])
-    
-        
+
+
     x_test1 = []
     for i in range(len(x_test)):
         x_test1.append(x_test[i][0])
         x_test1[i].extend(x_test[i][1])
-        
+
     return x_train1 , y_train , x_test1, y_test
 
 def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32):
@@ -75,11 +75,11 @@ def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32):
     model.summary()
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
     return model
-    
-def loadData(nameFile = "datasetbis.csv"):
+
+def loadData(nameFile = "CNN/datasetbis.csv"):
     print('load data function ')
     m = Movement(3,10,19,12)
-    m.readFromCsv(nameFile) 
+    m.readFromCsv(nameFile)
     m.describe()
     return m.dimensionReduction(numberOfDimension = 6) #30 2 19 6
 
@@ -90,13 +90,6 @@ def train(model,xtrain1, ytrain, xtest1 , ytest):
     _, accuracy = model.evaluate(xtest1, ytest, batch_size=batch_size, verbose=0)
     print(f'accuracy :\t {accuracy}')
     return model
-    
+
 def predict():
     print('predict function ')
-
-
-print('*'*25 + 'debut du programme' + '*'*25)
-data = loadData()
-x_train , y_train , x_test, y_test = splitData(data)
-model = createModel(x_train,y_train)
-model = train(model,x_train,y_train,x_test,y_test)
