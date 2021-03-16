@@ -4,7 +4,7 @@ from Mouvements import Mouvements
 from MouvTraining import MouvTraining
 import global_variables as gv
 from CNN.payload import *
-
+import TrainMouv as rm
 
 class Menu(tk.Frame):
     def __init__(self, master=None):
@@ -46,12 +46,7 @@ class Menu(tk.Frame):
         Mouvements(self)
 
     def trainModel(self):
-        # # supression des widgets présents sur la fenêtre
-        # for widget in self.winfo_children():
-        #     widget.pack_forget()
-        # MouvTraining(self)
-        print('*'*25 + 'training du model' + '*'*25)
-        data = loadData()
-        x_train , y_train , x_test, y_test = splitData(data)
-        model = createModel(x_train,y_train)
-        model = train(model,x_train,y_train,x_test,y_test)
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        tp = rm.TrMouv(self)
+        tp.newmouv()

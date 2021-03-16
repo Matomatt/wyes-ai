@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import Menu
-import Mouvements as mn
+import Menu as mn
 import time
 
 
@@ -20,16 +20,12 @@ class TrMouv(tk.Frame):
             for widget in self.winfo_children():
                 widget.pack_forget()
             # configuration du Header
-            self.t1 = tk.Label(self, text="Training du mouvement " + str(self.nummouv), justify=tk.CENTER, font=('Consolas', 20))
+            self.t1 = tk.Label(self, text="Training des mouvements", justify=tk.CENTER, font=('Consolas', 20))
             self.t1.configure(fg='goldenrod', bg='#f0f0f0')
             self.br = tk.Button(self, text="<- Retour", command=self.retour)
             self.br.configure(fg='lightgray', bg='#008080')
             self.t1.pack(side=tk.TOP)
             self.br.pack(side=tk.TOP)
-
-            self.bagain = tk.Button(self, text="Supprimer le mouvement", command=self.menu)
-            self.bagain.configure(fg='lightgray', bg='#b30000')
-            self.bagain.pack(side=tk.BOTTOM, pady=120)
 
             if self.statut==True:
                 self.btrain = tk.Button(self, text="Training", command=self.training)
@@ -41,17 +37,13 @@ class TrMouv(tk.Frame):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
-        mn.Mouvements(self)
+        mn.Menu(self)
 
     def menu(self):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
         Menu.Menu(self)
-
-
-    def quelmouv(self, idid):
-        self.nummouv = idid
 
     def training(self):
         if self.statut == True:
@@ -74,10 +66,13 @@ class TrMouv(tk.Frame):
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
         # V V V V V V V V V V V V V V V
-
+        print('*'*25 + 'training du model' + '*'*25)
+        data = loadData()
+        x_train , y_train , x_test, y_test = splitData(data)
+        model = createModel(x_train,y_train)
+        model = train(model,x_train,y_train,x_test,y_test)
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
         self.newmouv()
-
