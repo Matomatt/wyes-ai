@@ -1,6 +1,7 @@
 import tkinter as tk
 from Menu import Menu
-
+import global_variables as gv
+from CNN.payload import loadData
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -23,6 +24,9 @@ class Application(tk.Frame):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
+
+        gv.recordedMovements = loadData("dataset").tolist()
+
         Menu(self)
 
     def testco(self):

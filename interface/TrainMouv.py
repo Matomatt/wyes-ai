@@ -5,7 +5,7 @@ import Menu as mn
 import time
 from CNN.payload import *
 import global_variables as gv
-from keras.utils import np_utils
+import numpy as np
 
 
 class TrMouv(tk.Frame):
@@ -46,47 +46,37 @@ class TrMouv(tk.Frame):
         Menu.Menu(self)
 
     def training(self):
-        # Appel pour lancer un essai
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        # V V V V V V V V V V V V V V V
         print('*'*25 + 'training du model' + '*'*25)
-        # 3( nombre de type de mouv ) 1 (nombre d'essai) 19 (nombre de seconde) 12 (nombre de capteur)
-        """
-        # 30 2 19 6
-        tableau  = gv.recordedMovements # 3 10 19 12 -> 30 2 19 6
-        data = []
-        for i in range(len(tableau)): #nombre de type de mouv -> 3
-            for j in range(len(tableau[0])): #nombre d'essai -> 10
-                tab1_ = []
-                tab2_ = []
-                for k in range(len(tableau[0][0])): #nombre de seconde -> 19
-                    tab1_.append(tableau[i][j][k][:6]) #six premier capteurs
-                    tab2_.append(tableau[i][j][k][6:]) # six derniers capteurs
-                data.append([tab1_, tab2_])
-        print(f' dimension :\t[{len(data)}][{len(data[0])}][{len(data[0][0])}][{len(data[0][0][0])}]')
 
-        x_train , y_train , x_test, y_test = splitData(data,percent = 0.5, number_of_movements = len(tableau[0]))
-        model = createModel(x_train,y_train)
-        model = train(model,x_train,y_train,x_test,y_test)
-        """
+        if (len(gv.recordedMovements)<1):
+            data = loadData()
+        else:
+            data = gv.recordedMovements[0:]
+            file = open("dataset", "wb") # open a binary file in write mode
+            np.save(file, np.array(data)) # save array to the file
+            file.close
 
-        data = loadData()
-        x_train , y_train , x_test, y_test = splitData(data)
-        # Convert 1-dimensional class arrays to 3-dimensional class matrices
-        Y_train = np_utils.to_categorical(y_train, 3)
-        Y_test = np_utils.to_categorical(y_test, 3)
+        print("LOADED DATA", len(data), len(data[0]), len(data[0][0]), len(data[0][0][0]))
 
-        x_train = np.expand_dims(x_train, -1)
-        x_test = np.expand_dims(x_test, -1)
+        # 1 essai toujours 12*19
 
-        print(x_test)
-        model = createModel(x_train)
-        model = train(model,x_train,Y_train,x_test,Y_test)
-        # A A A A A A A A A A A A A A A
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
+        # data = [
+        # mouvement 1: [ [essai1], [essai2], ... ],
+        # mouvement 2: [ [essai1], [essai2], ... ],
+        # mouvement 3: [ [essai1], [essai2], ... ],
+        # ...
+        # ]
+
+        X_train , Y_train , X_test, Y_test = splitData(data, 1)
+
+        # [
+        # [m1 essai1],
+        # [m1 essai2],
+        # ...
+        # [mx essaiz]
+        # ]
+
+        model = createModel(X_train)
+        gv.AImodel = train(model, X_train, Y_train, X_test, Y_test)
 
         self.newmouv()

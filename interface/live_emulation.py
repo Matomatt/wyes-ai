@@ -325,6 +325,10 @@ def start():
     app = QApplication(sys.argv)
     ex = App()
     app.exec_()
-    essai = ex.essai[0:]
+    try:
+        essai = ex.essai[0:]
+    except:
+        essai = None
     ex.destroy()
+
     return essai

@@ -15,7 +15,7 @@ import random
 from numpy import mean
 from numpy import std
 from numpy import dstack
-from pandas import read_csv
+import pandas as pd
 from matplotlib import pyplot
 from keras.models import Sequential
 from keras.layers import Dense
@@ -23,7 +23,7 @@ from keras.layers import Flatten
 from keras.layers import Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
-from keras.utils import to_categorical
+from keras.utils import to_categorical, np_utils
 
 def shuffleData(x, y):
     c = list(zip(x,y))
@@ -31,53 +31,39 @@ def shuffleData(x, y):
     x, y = zip(*c)
     return x, y
 
-def splitData(data , percent = 0.6, number_of_movements = 10):
+def splitData(data , splitRatio = 0.6):
     print('split data function model')
-    x_train = []
-    y_train = []
-    x_test = []
-    y_test = []
-    for i in range(len(data)):
-        if i%number_of_movements < number_of_movements*percent:
-            y_train.append(int((i- i%number_of_movements)/number_of_movements))
-            x_train.append(data[i])
-        else:
-            y_test.append(int((i- i%number_of_movements)/number_of_movements))
-            x_test.append(data[i])
 
-    for i in range(len(x_train)):
-        for j in range(len(x_train[i])):
-            x_train[i][j] = x_train[i][j].tolist()
+    X = []
+    Y = []
+    for movementID in range(len(data)):
+        for essai in data[movementID]:
+            X.append(essai)
+            Y.append(movementID)
 
-    for i in range(len(x_test)):
-        for j in range(len(x_test[i])):
-            x_test[i][j] = x_test[i][j].tolist()
+    nbMovementToClassify = max(Y)
 
+    # Shuffling the dataset
+    df = pd.DataFrame({'X': X, 'Y': Y})
+    print(df)
+    df = df.sample(frac = 1)
+    print(df)
 
-    x_train1 = []
-    # 30 6 38
-    # 30 12 19
-    for i in range(len(x_train)):
-        temp = []
-        for j in range(len(x_train[i])):
-            temp.append(x_train[i][j])
-        x_train1.append(temp)
-        #x_train1.append(x_train[i][0])
-        #x_train1.append(x_train[i][1])
-        #x_train1[i].extend(x_train[i][1])
+    # Splitting the dataset
+    X_train = list(df['X'])[:int(len(X)*splitRatio)]
+    X_test = list(df['X'])[int(len(X)*splitRatio):]
+    Y_train = list(df['Y'])[:int(len(Y)*splitRatio)]
+    Y_test = list(df['Y'])[int(len(Y)*splitRatio):]
 
+    # Convert 1-dimensional class arrays to nbMovementToClassify-dimensional class matrices
+    Y_train = np_utils.to_categorical(Y_train, nbMovementToClassify+1)
+    Y_test = np_utils.to_categorical(Y_test, nbMovementToClassify+1)
 
-    x_test1 = []
-    for i in range(len(x_test)):
-        temp = []
-        for j in range(len(x_test[i])):
-            temp.append(x_test[i][j])
-        x_test1.append(temp)
+    # Make it compatible with the convolution2D layer
+    X_train = np.expand_dims(X_train, -1)
+    X_test = np.expand_dims(X_test, -1)
 
-    # x_train1 , y_train = shuffleData(x_train1 , y_train)
-    # x_test1, y_test = shuffleData(x_test1, y_test)
-
-    return np.array(x_train1) , np.array(y_train), np.array(x_test1), np.array(y_test)
+    return X_train, Y_train, X_test, Y_test
 
 
 def createModel(xtrain1): # 30 12 19
@@ -120,7 +106,13 @@ def uniformData(mov):
         mov[i] /= max(mov_)
     return mov
 
-def loadData(nameFile = "CNN/datasetbis.csv"):
+def loadData(fileName = "datasetTest"):
+    # open the file in read binary mode
+    file = open("datasetTest", "rb")
+    #read the file to numpy array
+    return np.load(file)
+
+def loadDataOldFormat(nameFile = "CNN/datasetbis.csv"):
     print('load data function ')
     m = Movement(3,10,19,12)
     m.readFromCsv(nameFile)
@@ -133,7 +125,7 @@ def train(model,xtrain1, ytrain, xtest1 , ytest):
     print("LEN Y", len(ytrain), len(ytrain[0]))
     print('train model function ')
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
-    _, accuracy = model.evaluate(xtest1, ytest, batch_size=batch_size, verbose=0)
+    _, accuracy = model.evaluate(xtrain1, ytrain, batch_size=batch_size, verbose=0)
     print(f'accuracy :\t {accuracy}')
     return model
 

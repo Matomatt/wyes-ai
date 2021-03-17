@@ -2,6 +2,8 @@ import tkinter as tk
 import Menu as mn
 import random
 import live_emulation as le
+import global_variables as gv
+import numpy as np
 
 
 class Controle(tk.Frame):
@@ -26,46 +28,17 @@ class Controle(tk.Frame):
             self.t1.pack(side=tk.TOP)
             self.br.pack(side=tk.TOP)
 
-            self.bm1 = tk.Button(self, text="Mouvement 1", width=33, height=10)
-            self.bm2 = tk.Button(self, text="Mouvement 2", width=33, height=10)
-            self.bm3 = tk.Button(self, text="Mouvement 3", width=33, height=10)
-
-            mouv = self.whichMouv(le.start())
-
-            # Mouvement 1
-            if(mouv==1):
-                self.bm1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm2.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm3.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-
-            # Mouvement 2
-            elif(mouv==2):
-                self.bm1.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm3.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-
-            # Mouvement 3
-            else:
-                self.bm1.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm2.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-                self.bm3.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT,
-                                   relief=tk.FLAT)
-
-            # Affichage des boutons mouvements
-            self.bm1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
-            self.bm2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
-            self.bm3.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
+            self.movementButtons = []
+            for i in range(len(gv.recordedMovements)):
+                button = tk.Button(self, text="Mouvement "+str(i+1), width=33, height=10)
+                button.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
+                self.movementButtons.append(button)
 
         if self.co==True:
-            self.after(100, self.cont)
+            self.after(100, self.predictMouv)
+
+
+
 
     def retour(self):
         self.co = False
@@ -74,17 +47,27 @@ class Controle(tk.Frame):
             widget.pack_forget()
         mn.Menu(self)
 
+    def predictMouv(self):
+        mouv = self.whichMouv(le.start())
+
+        if (mouv == -1):
+            self.retour()
+            return
+
+        for bt in self.movementButtons:
+            bt.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT, relief=tk.FLAT)
+        self.movementButtons[mouv].configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+
+        if self.co==True:
+            self.after(100, self.predictMouv)
+
     def whichMouv(self, record):
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        # V V V V V V V V V V V V V V V
+        if (record == None):
+            return -1
 
-        print(record)
+        arr = []
+        arr.append(record)
+        Y_hat = gv.AImodel.predict(np.expand_dims(arr, -1))
 
-        return random.randint(1, 3)
-        
-        # A A A A A A A A A A A A A A A
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
+        print(Y_hat)
+        return list(Y_hat[0]).index(max(Y_hat[0]))

@@ -2,50 +2,36 @@ import tkinter as tk
 import Menu as mn
 import RegisterMouv as rm
 from RegisterMouv import Regis
+import global_variables as gv
 
 
 class Mouvements(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
+        self.init()
         self.pack()
-        self.mouv()
 
-    def mouv(self):
+
+    def init(self):
         # configuration du Header
         self.t1 = tk.Label(self, text="Fenêtre des mouvements", justify=tk.CENTER, font=('Consolas', 20))
         self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-        self.br = tk.Button(self, text="<- Retour", command=self.retour)
-        self.br.configure(fg='lightgray', bg='#008080')
+        self.returnButton = tk.Button(self, text="<- Retour", command=self.retour)
+        self.returnButton.configure(fg='lightgray', bg='#008080')
+        self.addMovementButton = tk.Button(self, text="Ajouter un mouvement", command=self.addMovement)
+        self.addMovementButton.configure(fg='lightgray', bg='#008080')
+
         self.t1.pack(side=tk.TOP)
-        self.br.pack(side=tk.TOP)
+        self.returnButton.pack(side=tk.TOP)
+        self.addMovementButton.pack(side=tk.TOP)
 
-        mouvexist = self.nbMouv()
-        # choix des mouvements
-        self.bm1 = tk.Button(self, text="Mouvement 1", width=33, height=45, command=self.enremouv1)
-        self.bm2 = tk.Button(self, text="Mouvement 2", width=33, height=45, command=self.enremouv2)
-        self.bm3 = tk.Button(self, text="Mouvement 3", width=33, height=45, command=self.enremouv3)
-
-        if mouvexist == 0:
-            self.bm1.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm2.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm3.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        elif mouvexist == 1:
-            self.bm1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm2.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm3.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        elif mouvexist == 2:
-            self.bm1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm3.configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        else:
-            self.bm1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-            self.bm3.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-
-        self.bm1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
-        self.bm2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
-        self.bm3.pack(in_=self, side=tk.RIGHT, padx=10, pady=10)
+        self.mouvementButtons = []
+        nbMov = len(gv.recordedMovements) if len(gv.recordedMovements)>3 else 3
+        for i in range(nbMov):
+            self.mouvementButtons.append( tk.Button(self, text="Mouvement "+str(i+1), width=33, height=45, command=lambda index=i: self.buildMovementDataset(index)))
+            self.mouvementButtons[i].configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+            self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=10, pady=10)
 
     def retour(self):
         # supression des widgets présents sur la fenêtre
@@ -53,37 +39,16 @@ class Mouvements(tk.Frame):
             widget.pack_forget()
         mn.Menu(self)
 
-    def nbMouv(self):
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        # V V V V V V V V V V V V V V V
-        return 3
-        # A A A A A A A A A A A A A A A
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-
-    def enremouv1(self):
+    def buildMovementDataset(self, movementIndex):
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
         tp = rm.Regis(self)
-        tp.quelmouv(1)
-        tp.newmouv()
+        tp.init(movementIndex, 10)
 
-    def enremouv2(self):
-        # supression des widgets présents sur la fenêtre
-        for widget in self.winfo_children():
-            widget.pack_forget()
-        tp = rm.Regis(self)
-        tp.quelmouv(2)
-        tp.newmouv()
-
-    def enremouv3(self):
-        # supression des widgets présents sur la fenêtre
-        for widget in self.winfo_children():
-            widget.pack_forget()
-        tp = rm.Regis(self)
-        tp.quelmouv(3)
-        tp.newmouv()
+    def addMovement(self):
+        newIndex = len(self.mouvementButtons)
+        button = tk.Button(self, text="Mouvement "+str(newIndex+1), width=33, height=45, command=lambda index=newIndex: self.buildMovementDataset(index))
+        self.mouvementButtons.append(button)
+        self.mouvementButtons[newIndex].configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+        self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=10, pady=10)

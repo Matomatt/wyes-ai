@@ -17,12 +17,12 @@ class Menu(tk.Frame):
         self.t1.configure(fg='goldenrod', bg='#f0f0f0')
         self.t1.pack(pady=20)
 
-        if(Mouvements.nbMouv(self)==3):
-            self.b1 = tk.Button(self, text="Prendre le contrôle", width=33, height=45, command=self.cont)
-            self.b1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        else:
-            self.b1 = tk.Button(self, text="Prendre les contrôle", width=33, height=45)
-            self.b1.configure(fg='white', bg='#969696', overrelief=tk.FLAT, relief=tk.FLAT, cursor='X_cursor')
+        #if(Mouvements.nbMouv(self)==3):
+        self.b1 = tk.Button(self, text="Prendre le contrôle", width=33, height=45, command=self.cont)
+        self.b1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+        # else:
+        #     self.b1 = tk.Button(self, text="Prendre les contrôle", width=33, height=45)
+        #     self.b1.configure(fg='white', bg='#969696', overrelief=tk.FLAT, relief=tk.FLAT, cursor='X_cursor')
         self.b2 = tk.Button(self, text="Mouvements définis", width=33, height=45, command=self.mouv)
         self.b2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
         self.b3 = tk.Button(self, text="Training", width=33, height=45, command=self.trainModel)
@@ -30,7 +30,6 @@ class Menu(tk.Frame):
         self.b1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b3.pack(in_=self, side=tk.RIGHT, padx=10, pady=10)
-        print(gv.recordedMovements)
 
     def cont(self):
         # supression des widgets présents sur la fenêtre
