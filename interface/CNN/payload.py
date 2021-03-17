@@ -31,7 +31,7 @@ def shuffleData(x, y):
     x, y = zip(*c)
     return x, y
 
-def splitData(data , percent = 0.9, number_of_movements = 10):
+def splitData(data , percent = 0.6, number_of_movements = 10):
     print('split data function model')
     x_train = []
     y_train = []
@@ -44,45 +44,51 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
         else:
             y_test.append(int((i- i%number_of_movements)/number_of_movements))
             x_test.append(data[i])
-    try:
-        for i in range(len(x_train)):
-            for j in range(len(x_train[i])):
-                x_train[i][j] = x_train[i][j].tolist()
 
-        for i in range(len(x_test)):
-            for j in range(len(x_test[i])):
-                x_test[i][j] = x_test[i][j].tolist()
-    except:
-        print('',end='')
+    for i in range(len(x_train)):
+        for j in range(len(x_train[i])):
+            x_train[i][j] = x_train[i][j].tolist()
+
+    for i in range(len(x_test)):
+        for j in range(len(x_test[i])):
+            x_test[i][j] = x_test[i][j].tolist()
+
 
     x_train1 = []
     # 30 6 38
     # 30 12 19
-    for i in range(len(x_train)): #30 12 19
-        x_train1.append(x_train[i][0])
-        x_train1.append(x_train[i][1])
+    for i in range(len(x_train)):
+        temp = []
+        for j in range(len(x_train[i])):
+            temp.append(x_train[i][j])
+        x_train1.append(temp)
+        #x_train1.append(x_train[i][0])
+        #x_train1.append(x_train[i][1])
         #x_train1[i].extend(x_train[i][1])
 
 
     x_test1 = []
     for i in range(len(x_test)):
-        x_test1.append(x_test[i][0])
-        x_test1.append(x_test[i][1])
-        #x_test1[i].extend(x_test[i][1])
-    x_train1 , y_train = shuffleData(x_train1 , y_train)
-    x_test1, y_test = shuffleData(x_test1, y_test)
-    return x_train1 , y_train , x_test1, y_test
+        temp = []
+        for j in range(len(x_test[i])):
+            temp.append(x_test[i][j])
+        x_test1.append(temp)
+
+    # x_train1 , y_train = shuffleData(x_train1 , y_train)
+    # x_test1, y_test = shuffleData(x_test1, y_test)
+
+    return np.array(x_train1) , np.array(y_train), np.array(x_test1), np.array(y_test)
 
 
-
-def createModel(xtrain1, ytrain ,verbose = 0,epochs = 100,batch_size= 10): # 30 12 19
+def createModel(xtrain1): # 30 12 19
     print('create model function ')
-    n_timesteps, n_features, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 3
-    print("TIME STEP", n_timesteps, "CAPTORS", n_features)
     print("LEN X", len(xtrain1), len(xtrain1[0]), len(xtrain1[0][0]))
+    n_captors, n_timesteps, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 3
+    print("TIME STEP", n_timesteps, "CAPTORS", n_captors)
+
     model = Sequential()
 
-    model.add(Convolution2D(32, (3, 3), activation="relu", input_shape=(19,6,1)))
+    model.add(Convolution2D(32, (3, 3), activation="relu", input_shape=(n_captors, n_timesteps, 1)))
     print ("INPUT SHAPE", model.input_shape)
 
     model.add(Convolution2D(32, (3, 3), activation="relu"))
@@ -122,7 +128,7 @@ def loadData(nameFile = "CNN/datasetbis.csv"):
     return uniformData(m.getMovements())
 
 def train(model,xtrain1, ytrain, xtest1 , ytest):
-    verbose, epochs, batch_size = 0, 100, 10
+    verbose, epochs, batch_size = 0, 100, len(xtrain1)
     print(ytrain)
     print("LEN Y", len(ytrain), len(ytrain[0]))
     print('train model function ')
@@ -133,4 +139,3 @@ def train(model,xtrain1, ytrain, xtest1 , ytest):
 
 def predict():
     print('predict function ')
-
