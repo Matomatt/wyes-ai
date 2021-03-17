@@ -1,3 +1,4 @@
+
 from CNN.movement import Movement
 from CNN.movement import showResult
 
@@ -9,7 +10,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.datasets import load_iris
 from numpy import unique
 import numpy as np
-
+import random
 # cnn model
 from numpy import mean
 from numpy import std
@@ -24,6 +25,11 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.utils import to_categorical
 
+def shuffleData(x, y):
+    c = list(zip(x,y))
+    random.shuffle(c)
+    x, y = zip(*c)
+    return x, y
 
 def splitData(data , percent = 0.9, number_of_movements = 10):
     print('split data function model')
@@ -63,8 +69,11 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
         x_test1.append(x_test[i][0])
         x_test1.append(x_test[i][1])
         #x_test1[i].extend(x_test[i][1])
-
+    x_train1 , y_train = shuffleData(x_train1 , y_train)
+    x_test1, y_test = shuffleData(x_test1, y_test)
     return x_train1 , y_train , x_test1, y_test
+
+
 
 def createModel(xtrain1, ytrain ,verbose = 0,epochs = 100,batch_size= 10): # 30 12 19
     print('create model function ')
@@ -97,12 +106,20 @@ def createModel(xtrain1, ytrain ,verbose = 0,epochs = 100,batch_size= 10): # 30 
 
     return model
 
+def uniformData(mov):
+    for i in range(len(mov)): #30
+        mov_ = []
+        for j in range(len(mov[0])): #12
+            mov_.append(max(mov[i][j]))
+        mov[i] /= max(mov_)
+    return mov
+
 def loadData(nameFile = "CNN/datasetbis.csv"):
     print('load data function ')
     m = Movement(3,10,19,12)
     m.readFromCsv(nameFile)
     m.describe()
-    return m.getMovements() #30 2 19 6
+    return uniformData(m.getMovements())
 
 def train(model,xtrain1, ytrain, xtest1 , ytest):
     verbose, epochs, batch_size = 0, 100, 10
@@ -116,3 +133,4 @@ def train(model,xtrain1, ytrain, xtest1 , ytest):
 
 def predict():
     print('predict function ')
+

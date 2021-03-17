@@ -77,9 +77,10 @@ class TrMouv(tk.Frame):
         # Convert 1-dimensional class arrays to 3-dimensional class matrices
         Y_train = np_utils.to_categorical(y_train, 3)
         Y_test = np_utils.to_categorical(y_test, 3)
+        """
         model = createModel(x_train[:27],Y_train)
         model = train(model,x_train[:27],Y_train,x_test,Y_test)
-
+        """
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
