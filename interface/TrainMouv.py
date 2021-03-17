@@ -5,6 +5,7 @@ import Menu as mn
 import time
 from CNN.payload import *
 import global_variables as gv
+from keras.utils import np_utils
 
 
 class TrMouv(tk.Frame):
@@ -53,14 +54,14 @@ class TrMouv(tk.Frame):
         print('*'*25 + 'training du model' + '*'*25)
         # 3( nombre de type de mouv ) 1 (nombre d'essai) 19 (nombre de seconde) 12 (nombre de capteur)
         """
-        # 30 2 19 6 
-        tableau  = gv.recordedMovements # 3 10 19 12 -> 30 2 19 6 
+        # 30 2 19 6
+        tableau  = gv.recordedMovements # 3 10 19 12 -> 30 2 19 6
         data = []
         for i in range(len(tableau)): #nombre de type de mouv -> 3
             for j in range(len(tableau[0])): #nombre d'essai -> 10
-                tab1_ = [] 
+                tab1_ = []
                 tab2_ = []
-                for k in range(len(tableau[0][0])): #nombre de seconde -> 19 
+                for k in range(len(tableau[0][0])): #nombre de seconde -> 19
                     tab1_.append(tableau[i][j][k][:6]) #six premier capteurs
                     tab2_.append(tableau[i][j][k][6:]) # six derniers capteurs
                 data.append([tab1_, tab2_])
@@ -70,15 +71,18 @@ class TrMouv(tk.Frame):
         model = createModel(x_train,y_train)
         model = train(model,x_train,y_train,x_test,y_test)
         """
-        
+
         data = loadData()
         x_train , y_train , x_test, y_test = splitData(data)
-        model = createModel(x_train,y_train)
-        model = train(model,x_train,y_train,x_test,y_test)
-        
+        # Convert 1-dimensional class arrays to 3-dimensional class matrices
+        Y_train = np_utils.to_categorical(y_train, 3)
+        Y_test = np_utils.to_categorical(y_test, 3)
+        model = createModel(x_train[:27],Y_train)
+        model = train(model,x_train[:27],Y_train,x_test,Y_test)
+
         # A A A A A A A A A A A A A A A
         # | | | | | | | | | | | | | | |
         # | | | | CODES A MODIF | | | |
         # | | | | | | | | | | | | | | |
-        
+
         self.newmouv()

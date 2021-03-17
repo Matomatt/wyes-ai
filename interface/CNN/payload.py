@@ -52,7 +52,7 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
     x_train1 = []
     # 30 6 38
     # 30 12 19
-    for i in range(len(x_train)): #30 12 19 
+    for i in range(len(x_train)): #30 12 19
         x_train1.append(x_train[i][0])
         x_train1.append(x_train[i][1])
         #x_train1[i].extend(x_train[i][1])
@@ -66,30 +66,34 @@ def splitData(data , percent = 0.9, number_of_movements = 10):
 
     return x_train1 , y_train , x_test1, y_test
 
-def createModel(xtrain1, ytrain ,verbose = 0,epochs = 10,batch_size= 32): # 30 12 19 
+def createModel(xtrain1, ytrain ,verbose = 0,epochs = 100,batch_size= 10): # 30 12 19
     print('create model function ')
-    n_timesteps, n_features, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 1
+    n_timesteps, n_features, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 3
+    print("TIME STEP", n_timesteps, "CAPTORS", n_features)
+    print("LEN X", len(xtrain1), len(xtrain1[0]), len(xtrain1[0][0]))
     model = Sequential()
 
-    model.add(Convolution2D(32, (3, 3), activation="relu", input_shape=(12,19,1)))
-    print (model.output_shape)
+    model.add(Convolution2D(32, (3, 3), activation="relu", input_shape=(19,6,1)))
+    print ("INPUT SHAPE", model.input_shape)
 
     model.add(Convolution2D(32, (3, 3), activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2,2)))
-    model.add(Dropout(0.25))
+    # model.add(MaxPooling2D(pool_size=(2,2)))
+    # model.add(Dropout(0.25))
 
     model.add(Flatten())
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.3))
     model.add(Dense(512, activation="relu"))
-    model.add(Dropout(0.6))
-    model.add(Dense(3, activation="softmax"))
+    model.add(Dropout(0.1))
+    model.add(Dense(256, activation="relu"))
+    model.add(Dropout(0.2))
+    model.add(Dense(256, activation="relu"))
+    model.add(Dropout(0.2))
+    model.add(Dense(n_outputs, activation="softmax"))
+    print ("OUTPUT SHAPE", model.output_shape)
 
     model.compile(loss='categorical_crossentropy',
                 optimizer='adam',
                 metrics=['accuracy'])
     model.summary()
-    model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
 
     return model
 
@@ -98,10 +102,12 @@ def loadData(nameFile = "CNN/datasetbis.csv"):
     m = Movement(3,10,19,12)
     m.readFromCsv(nameFile)
     m.describe()
-    return m.dimensionReduction(numberOfDimension = 6) #30 2 19 6
+    return m.getMovements() #30 2 19 6
 
 def train(model,xtrain1, ytrain, xtest1 , ytest):
-    verbose, epochs, batch_size = 0, 10, 32
+    verbose, epochs, batch_size = 0, 100, 10
+    print(ytrain)
+    print("LEN Y", len(ytrain), len(ytrain[0]))
     print('train model function ')
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
     _, accuracy = model.evaluate(xtest1, ytest, batch_size=batch_size, verbose=0)
