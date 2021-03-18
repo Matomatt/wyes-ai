@@ -34,6 +34,9 @@ class Regis(tk.Frame):
         self.bregis = tk.Button(self, text="Nouvel essai : " + str(len(gv.recordedMovements[self.movementIndex])) + "/" + str(desiredNumberOfEssai), command=self.progression)
         self.bregis.pack(side=tk.TOP, pady=20)
 
+        le = tk.Label(self, text="Essai :", justify=tk.LEFT, font=('Consolas', 10))
+        le.place(x=0, y=110)
+
         self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
         self.bagain.configure(fg='lightgray', bg='#b30000')
         self.bagain.pack(side=tk.BOTTOM, pady=120)
@@ -48,7 +51,7 @@ class Regis(tk.Frame):
                 self.essaiButtons[i].configure(fg='black', bg='#d9d9d9')
 
     def addEssaiButton(self, index):
-        l = tk.Label(self, text="Essai n°"+str(index+1), justify=tk.CENTER, font=('Consolas', 10))
+        l = tk.Label(self, text="n°"+str(index+1), justify=tk.CENTER, font=('Consolas', 10))
         l.configure(fg='black', bg='#b3b3b3')
         l.pack(side=tk.LEFT)
         self.essaiButtons.append(l)
@@ -79,6 +82,8 @@ class Regis(tk.Frame):
             if len(gv.recordedMovements[self.movementIndex])>=self.desiredNumberOfEssai:
                 print("finito")
                 # Ajouter un label pour dire bien joué on peut passer à la suite mtn
+                lf = tk.Label(self, text="Les 10 essais nécessaires ont été fait\nMais vous pouvez continuer à entrainer l'IA", justify=tk.CENTER, font=('Consolas', 10))
+                lf.place(x=65, y=200)
         else:
             print("QUITTING")
             #QUIT
