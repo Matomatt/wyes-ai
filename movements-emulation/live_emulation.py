@@ -8,6 +8,7 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from datetime import datetime
+import serial
 
 class App(QMainWindow):
 
@@ -30,6 +31,14 @@ class App(QMainWindow):
         ##Processing
         self.initProcessing();
         ##Init
+        try:
+            self.esp = serial.Serial(port='COM6', baudrate=115200, timeout=.1)
+        except:
+            self.esp = None
+        if(self.esp!= None) :
+            print("Let's go")
+        else :
+            print("error")
         self.initUI()
         self.setMouseTracking(True)
 
@@ -152,6 +161,18 @@ class App(QMainWindow):
         self.statusBar().showMessage(' '.join(map(str, distances)))
 
     def getLastSampledValues(self):
+        if (self.esp != None):
+            line = str(self.esp.readline())
+            line = line[2:len(line)-5]
+            info = line.split(", ")
+            liste = []
+            for i in info:
+                test = i
+                if(test.isdigit()) :
+                    liste.append(int(i))
+            print (self.lastSample, " vs ", liste[1:]*6)
+            return liste[1:]*6
+
         return self.lastSample
 
 
@@ -252,7 +273,7 @@ def saveFigMovementsBySensor(array, name, prefix, numberOfSamples):
     axs[0].legend()
 
     #creation des fichiers contenant les graphes
-    fig.savefig(name + '{}.png'.format(str(datetime.now())))
+    fig.savefig(name + '{}.png'.format(str(datetime.now().strftime("%H_%M_%S"))))
     fig.clf()
     plt.close()
 
@@ -285,7 +306,7 @@ def saveFigMovementsSummed(array, name, prefix, numberOfSamples):
 
     #creation des fichiers contenant les graphes
     # fig.savefig(name + '{}.png'.format(prefix))
-    fig.savefig(name + '{}.png'.format(str(datetime.now())))
+    fig.savefig(name + '{}.png'.format(str(datetime.now().strftime("%H_%M_%S"))))
     fig.clf()
     plt.close()
 

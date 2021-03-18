@@ -2,6 +2,7 @@ import tkinter as tk
 from Menu import Menu
 import global_variables as gv
 from CNN.payload import loadData
+import serial
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -30,13 +31,12 @@ class Application(tk.Frame):
         Menu(self)
 
     def testco(self):
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        # V V V V V V V V V V V V V V V
-
-        # A A A A A A A A A A A A A A A
-        # | | | | | | | | | | | | | | |
-        # | | | | CODES A MODIF | | | |
-        # | | | | | | | | | | | | | | |
-        self.suiv()
+        try:
+            gv.esp = serial.Serial(port='COM6', baudrate=115200, timeout=.1)
+        except:
+            gv.esp = None
+        if(gv.esp!= None) :
+            print("Let's go")
+            self.suiv()
+        else :
+            print("error")

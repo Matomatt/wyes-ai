@@ -10,6 +10,7 @@ import matplotlib as mpl
 from datetime import datetime
 import serial
 import time
+import global_variables as gv
 
 class App(QMainWindow):
 
@@ -32,10 +33,6 @@ class App(QMainWindow):
         ##Processing
         self.initProcessing();
         ##Init
-        try:
-            self.esp = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=.1)
-        except:
-            self.esp = None
         self.initUI()
         self.setMouseTracking(True)
 
@@ -158,8 +155,8 @@ class App(QMainWindow):
         self.statusBar().showMessage(' '.join(map(str, distances)))
 
     def getLastSampledValues(self):
-        if (self.esp != None):
-            line = str(esp.readline())
+        if (gv.esp != None):
+            line = str(gv.esp.readline())
             line = line[2:len(line)-5]
             info = line.split(", ")
             liste = []
@@ -167,8 +164,8 @@ class App(QMainWindow):
                 test = i
                 if(test.isdigit()) :
                     liste.append(int(i))
-            print (self.lastSample, " vs ", liste)
-            return liste
+            print (self.lastSample, " vs ", liste[1:]*6)
+            return liste[1:]*6
 
         return self.lastSample
 
