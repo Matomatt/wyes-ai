@@ -35,8 +35,8 @@ class Application(tk.Frame):
             gv.esp = serial.Serial(port='COM6', baudrate=115200, timeout=.1)
         except:
             gv.esp = None
-        if(gv.esp!= None) :
-            print("Let's go")
+        if(gv.esp!= None):
             self.suiv()
-        else :
+        else:
+            #Ajouter un bouton, pour dire connection foiré et permettre l'entrée au programme quand même
             print("error")

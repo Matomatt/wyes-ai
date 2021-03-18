@@ -50,7 +50,7 @@ class Mouvements(tk.Frame):
         newIndex = len(self.mouvementButtons)
         for mouv in self.mouvementButtons:
             mouv.configure(width=int((100-newIndex-1)/newIndex))
-        button = tk.Button(self, text="Mouvement "+str(newIndex+1), width=int(100/newIndex), height=45, command=lambda index=newIndex: self.buildMovementDataset(index))
+        button = tk.Button(self, text="Mouvement "+str(newIndex+1), width=int((100-newIndex-1)/newIndex), height=45, command=lambda index=newIndex: self.buildMovementDataset(index))
         self.mouvementButtons.append(button)
         self.mouvementButtons[newIndex].configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
         self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=10, pady=10)
