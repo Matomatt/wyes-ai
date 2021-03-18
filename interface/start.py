@@ -6,7 +6,6 @@ def main(root):
     # apparence fenêtre
     root.configure(bg='#f0f0f0')
     root.geometry("1000x650")
-    root.resizable(False, False)
     # root.wm_iconbitmap("Images/icone.ico")
 
     # objets fenêtre

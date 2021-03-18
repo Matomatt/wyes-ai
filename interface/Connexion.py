@@ -16,7 +16,7 @@ class Application(tk.Frame):
         # connexion aux lunettes
         self.t1 = tk.Label(self, text="Connexion à vos lunettes", justify=tk.CENTER, font=('Consolas', 20))
         self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-        self.b1 = tk.Button(self, text="Connexion ->", command=self.testco)
+        self.b1 = tk.Button(self, text="Tester la connexion ->", command=self.testco)
         self.b1.configure(fg='goldenrod', bg='#f0f0f0', overrelief=tk.FLAT)
         self.t1.pack(pady=20)
         self.b1.pack(pady=220)
@@ -39,4 +39,5 @@ class Application(tk.Frame):
             self.suiv()
         else:
             #Ajouter un bouton, pour dire connection foiré et permettre l'entrée au programme quand même
-            print("error")
+            self.b1.configure(text="Connexion aux lunettes impossible\nCliquez pour accéder au logiciel malgré tout", bg="#ff6666", fg="white", command=self.suiv)
+            self.b1.pack()

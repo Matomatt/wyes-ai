@@ -17,19 +17,19 @@ class Mouvements(tk.Frame):
         # configuration du Header
         self.t1 = tk.Label(self, text="Fenêtre des mouvements", justify=tk.CENTER, font=('Consolas', 20))
         self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-        self.returnButton = tk.Button(self, text="<- Retour", command=self.retour, width=int(self.winfo_width()*3/10))
+        self.returnButton = tk.Button(self, text="<- Retour", command=self.retour, width=int(self.master.winfo_width()*22/1000))
         self.returnButton.configure(fg='lightgray', bg='#008080')
         self.addMovementButton = tk.Button(self, text="Ajouter un mouvement", command=self.addMovement)
         self.addMovementButton.configure(fg='lightgray', bg='#008080')
 
         self.t1.pack(side=tk.TOP)
-        self.returnButton.pack(side=tk.TOP)
+        self.returnButton.pack(side=tk.TOP, pady=10)
         self.addMovementButton.pack(side=tk.TOP)
 
         self.mouvementButtons = []
         nbMov = len(gv.recordedMovements) if len(gv.recordedMovements)>3 else 3
         for i in range(nbMov):
-            self.mouvementButtons.append( tk.Button(self, text="Mouvement "+str(i+1), width=int((100-nbMov-1)/nbMov), height=45, command=lambda index=i: self.buildMovementDataset(index)))
+            self.mouvementButtons.append( tk.Button(self, text="Mouvement "+str(i+1), width=int((self.master.winfo_width()/10-nbMov-1)/nbMov), height=45, command=lambda index=i: self.buildMovementDataset(index)))
             self.mouvementButtons[i].configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
             self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=10, pady=10)
 
@@ -49,8 +49,8 @@ class Mouvements(tk.Frame):
     def addMovement(self):
         newIndex = len(self.mouvementButtons)
         for mouv in self.mouvementButtons:
-            mouv.configure(width=int((100-newIndex-1)/newIndex))
-        button = tk.Button(self, text="Mouvement "+str(newIndex+1), width=int((100-newIndex-1)/newIndex), height=45, command=lambda index=newIndex: self.buildMovementDataset(index))
+            mouv.configure(width=int((self.master.winfo_width()/10-newIndex-1)/newIndex))
+        button = tk.Button(self, text="Mouvement "+str(newIndex+1), width=int((self.master.winfo_width()/10-newIndex-1)/newIndex), height=45, command=lambda index=newIndex: self.buildMovementDataset(index))
         self.mouvementButtons.append(button)
         self.mouvementButtons[newIndex].configure(fg='white', bg='#969696', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
         self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=10, pady=10)

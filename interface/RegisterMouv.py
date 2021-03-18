@@ -46,9 +46,9 @@ class Regis(tk.Frame):
         for i in range(nbEssai):
             self.addEssaiButton(i)
             if (i<len(gv.recordedMovements[movementIndex])):
-                self.essaiButtons[i].configure(fg='black', bg='#009933')
+                self.essaiButtons[i].configure(fg='black', bg='#009933', width=int(self.master.winfo_width()/(10*nbEssai)))
             elif (i==len(gv.recordedMovements[movementIndex])):
-                self.essaiButtons[i].configure(fg='black', bg='#d9d9d9')
+                self.essaiButtons[i].configure(fg='black', bg='#d9d9d9', width=int(self.master.winfo_width()/(10*nbEssai)))
 
     def addEssaiButton(self, index):
         l = tk.Label(self, text="n°"+str(index+1), justify=tk.CENTER, font=('Consolas', 10))
