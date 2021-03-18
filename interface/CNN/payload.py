@@ -66,10 +66,10 @@ def splitData(data , splitRatio = 0.6):
     return X_train, Y_train, X_test, Y_test
 
 
-def createModel(xtrain1): # 30 12 19
+def createModel(X_train, Y_train): # 30 12 19
     print('create model function ')
-    print("LEN X", len(xtrain1), len(xtrain1[0]), len(xtrain1[0][0]))
-    n_captors, n_timesteps, n_outputs = len(xtrain1[0]), len(xtrain1[0][0]) , 3
+    print("LEN X", len(X_train), len(X_train[0]), len(X_train[0][0]))
+    n_captors, n_timesteps, n_outputs = len(X_train[0]), len(X_train[0][0]) , len(Y_train[0])
     print("TIME STEP", n_timesteps, "CAPTORS", n_captors)
 
     model = Sequential()
@@ -108,9 +108,9 @@ def uniformData(mov):
 
 def loadData(fileName = "datasetTest"):
     # open the file in read binary mode
-    file = open("datasetTest", "rb")
+    file = open(fileName, "rb")
     #read the file to numpy array
-    return np.load(file)
+    return np.load(file, allow_pickle=True)
 
 def loadDataOldFormat(nameFile = "CNN/datasetbis.csv"):
     print('load data function ')
@@ -125,7 +125,7 @@ def train(model,xtrain1, ytrain, xtest1 , ytest):
     print("LEN Y", len(ytrain), len(ytrain[0]))
     print('train model function ')
     model.fit(xtrain1, ytrain, epochs=epochs, batch_size=batch_size, verbose=verbose)
-    _, accuracy = model.evaluate(xtrain1, ytrain, batch_size=batch_size, verbose=0)
+    _, accuracy = model.evaluate(xtest1, ytest, batch_size=batch_size, verbose=0)
     print(f'accuracy :\t {accuracy}')
     return model
 

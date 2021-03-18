@@ -27,7 +27,7 @@ class Application(tk.Frame):
             widget.pack_forget()
 
         gv.recordedMovements = loadData("dataset").tolist()
-
+        print("plop", len(gv.recordedMovements[0]))
         Menu(self)
 
     def testco(self):

@@ -47,14 +47,20 @@ class TrMouv(tk.Frame):
 
     def training(self):
         print('*'*25 + 'training du model' + '*'*25)
-
+        
+        print("plop avant", len(gv.recordedMovements[0]))
+        
         if (len(gv.recordedMovements)<1):
             data = loadData()
+            print("plop if", len(gv.recordedMovements[0]))
         else:
+            print("plop else", len(gv.recordedMovements[0]))
             data = gv.recordedMovements[0:]
             file = open("dataset", "wb") # open a binary file in write mode
             np.save(file, np.array(data)) # save array to the file
             file.close
+            print("plop data", len(data[0]))
+        print("plop appr", len(gv.recordedMovements[0]))
 
         print("LOADED DATA", len(data), len(data[0]), len(data[0][0]), len(data[0][0][0]))
 
@@ -67,7 +73,7 @@ class TrMouv(tk.Frame):
         # ...
         # ]
 
-        X_train , Y_train , X_test, Y_test = splitData(data, 1)
+        X_train , Y_train , X_test, Y_test = splitData(data, 0.6)
 
         # [
         # [m1 essai1],
@@ -76,7 +82,7 @@ class TrMouv(tk.Frame):
         # [mx essaiz]
         # ]
 
-        model = createModel(X_train)
+        model = createModel(X_train, Y_train)
         gv.AImodel = train(model, X_train, Y_train, X_test, Y_test)
 
         self.newmouv()
