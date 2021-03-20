@@ -3,6 +3,7 @@ from Menu import Menu
 import global_variables as gv
 from CNN.payload import loadData
 import serial
+import glasses_calibration as gc
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -32,10 +33,12 @@ class Application(tk.Frame):
 
     def testco(self):
         try:
-            gv.esp = serial.Serial(port='COM6', baudrate=115200, timeout=.1)
+            gv.esp = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
         except:
             gv.esp = None
         if(gv.esp!= None):
+            gv.minThreshold = gc.start()
+            print("Min Threshold :", gv.minThreshold)
             self.suiv()
         else:
             #Ajouter un bouton, pour dire connection foiré et permettre l'entrée au programme quand même

@@ -39,7 +39,14 @@ class Regis(tk.Frame):
 
         self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
         self.bagain.configure(fg='lightgray', bg='#b30000')
-        self.bagain.pack(side=tk.BOTTOM, pady=120)
+        self.bagain.pack(side=tk.BOTTOM, pady=10)
+
+        self.deleteLastMovementButton = tk.Button(self, text="Supprimer le dernier essai", command=self.deleteLast)
+        self.deleteLastMovementButton.configure(fg='lightgray', bg='#b30000')
+        self.deleteLastMovementButton.pack(side=tk.BOTTOM, pady=60)
+
+        self.lf = tk.Label(self, text="", justify=tk.CENTER, font=('Consolas', 10))
+        self.lf.pack(side=tk.BOTTOM, pady=20)
 
         self.essaiButtons = []
         nbEssai = len(gv.recordedMovements[movementIndex])+1 if len(gv.recordedMovements[movementIndex])>=desiredNumberOfEssai else desiredNumberOfEssai
@@ -66,6 +73,11 @@ class Regis(tk.Frame):
         gv.recordedMovements[self.movementIndex] = []
         self.init(self.movementIndex, self.desiredNumberOfEssai)
 
+    def deleteLast(self):
+        if (len(gv.recordedMovements[self.movementIndex]) == 0): return
+        gv.recordedMovements[self.movementIndex] = gv.recordedMovements[self.movementIndex][:-1]
+        self.init(self.movementIndex, self.desiredNumberOfEssai)
+
     def progression(self):
         newMovement = le.start()
         if (newMovement != None):
@@ -81,9 +93,8 @@ class Regis(tk.Frame):
 
             if len(gv.recordedMovements[self.movementIndex])>=self.desiredNumberOfEssai:
                 print("finito")
-                # Ajouter un label pour dire bien joué on peut passer à la suite mtn
-                lf = tk.Label(self, text="Les 10 essais nécessaires ont été fait\nMais vous pouvez continuer à entrainer l'IA", justify=tk.CENTER, font=('Consolas', 10))
-                lf.place(x=65, y=200)
+                self.lf.configure(text = "Les 10 essais nécessaires ont été fait\nMais vous pouvez continuer à entrainer l'IA")
+
         else:
             print("QUITTING")
             #QUIT

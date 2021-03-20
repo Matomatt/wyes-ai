@@ -33,8 +33,19 @@ class App(QMainWindow):
         ##Processing
         self.initProcessing();
         ##Init
-        self.initUI()
-        self.setMouseTracking(True)
+        if (gv.esp == None):
+            self.initUI()
+            self.setMouseTracking(True)
+        else: self.initUIGlasses()
+
+        ##Start processing
+        self.startProcessingTimer = QTimer()
+        self.startProcessingTimer.timeout.connect(self.startProcessing)
+        self.startProcessingTimer.start(self.processingStartAfter)
+        self.sampleTimer=QTimer()
+        self.sampleTimer.timeout.connect(self.sample)
+        self.sampleTimer.start(int(1000/self.sampleRate))
+
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -53,22 +64,34 @@ class App(QMainWindow):
             captors.append(captor)
         self.circles = [200,640,200, 410,340,360, 750,480,280]
         self.circlesInitPos = self.circles.copy()
+        #Labels
+        self.recordingLabel = QLabel(self)
+        self.recordingLabel.setText("Amplitude des mouvements faciaux")
+        self.recordingLabel.move(0,0)
+        self.recordingLabel.resize(300, 20)
         ##Timers
-        self.sampleTimer=QTimer()
-        self.sampleTimer.timeout.connect(self.sample)
-        self.sampleTimer.start(int(1000/self.sampleRate))
         self.backToPosTimer=QTimer()
         self.backToPosTimer.timeout.connect(self.comeBackToPosition)
         self.backToPosTimer.start(int(1000/self.FPS))
         self.updateTimer=QTimer()
         self.updateTimer.timeout.connect(self.paintUpdate)
         self.updateTimer.start(int(1000/self.FPS))
-        self.startProcessingTimer = QTimer()
-        self.startProcessingTimer.timeout.connect(self.startProcessing)
-        self.startProcessingTimer.start(self.processingStartAfter)
+
+        self.show()
+
+    def initUIGlasses(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height/2)
+
+        self.recordingLabel = QLabel(self)
+        self.recordingLabel.setText("Amplitude des mouvements faciaux")
+        self.recordingLabel.move(0,0)
+        self.recordingLabel.resize(300, 20)
+
         self.show()
 
     def paintEvent(self, e):
+        if (gv.esp != None): return
         painter = QPainter(self)
         painter.setPen(QPen(Qt.green, 2, Qt.SolidLine))
         painter.drawRect(20,20,1020,1020)
@@ -135,38 +158,37 @@ class App(QMainWindow):
             self.selectedCircles[i] = False
 
     def sample(self):
-        distances=[600]*6
-        for i in range(0,6):
-            x = self.captors[i*2]-5
-            y = self.captors[i*2+1]-5
-            for j in range(0,3):
-                cx=self.circles[j*3]+20
-                cy=self.circles[j*3+1]+20
-                cr=self.circles[j*3+2]/2
-                angle=(self.rotation[i]-90)*pi/180
-                vect=[int(cos(angle)), int(sin(angle))]
-                if (abs(x-cx)<=cr and vect[1]!=0 or abs(y-cy)<=cr and vect[0]!=0):
-                    dist = (abs(y-cy) + sqrt(abs(cr**2-(x-cx)**2))*vect[0])*abs(vect[0]) + (abs(x-cx) + sqrt(abs(cr**2-(y-cy)**2))*vect[1])*abs(vect[1])
+        if (gv.esp != None):
+            line = (str(gv.esp.readline())[18:][:-7]).split(',')
+            if (len(line)!=7): return;
 
-                    if (abs(dist) < distances[i]):
-                        distances[i] = abs(int(dist))
-                        self.lastSample[i] = distances[i]
-                        self.lastSample[i+6] = distances[i]
-        self.statusBar().showMessage(' '.join(map(str, distances)))
+            captValList = []
+            for l in line:
+                try: captValList.append(int(l.split(':')[1]))
+                except: print(line);  return;
+            # print(captValList)
+            self.lastSample = captValList[:6]*2
+        else:
+            distances=[600]*6
+            for i in range(0,6):
+                x = self.captors[i*2]-5
+                y = self.captors[i*2+1]-5
+                for j in range(0,3):
+                    cx=self.circles[j*3]+20
+                    cy=self.circles[j*3+1]+20
+                    cr=self.circles[j*3+2]/2
+                    angle=(self.rotation[i]-90)*pi/180
+                    vect=[int(cos(angle)), int(sin(angle))]
+                    if (abs(x-cx)<=cr and vect[1]!=0 or abs(y-cy)<=cr and vect[0]!=0):
+                        dist = (abs(y-cy) + sqrt(abs(cr**2-(x-cx)**2))*vect[0])*abs(vect[0]) + (abs(x-cx) + sqrt(abs(cr**2-(y-cy)**2))*vect[1])*abs(vect[1])
+
+                        if (abs(dist) < distances[i]):
+                            distances[i] = abs(int(dist))
+                            self.lastSample[i] = distances[i]
+                            self.lastSample[i+6] = distances[i]
+            self.statusBar().showMessage(' '.join(map(str, distances)))
 
     def getLastSampledValues(self):
-        if (gv.esp != None):
-            line = str(gv.esp.readline())
-            line = line[2:len(line)-5]
-            info = line.split(", ")
-            liste = []
-            for i in info:
-                test = i
-                if(test.isdigit()) :
-                    liste.append(int(i))
-            print (self.lastSample, " vs ", liste[1:]*6)
-            return liste[1:]*6
-
         return self.lastSample
 
 
@@ -187,16 +209,17 @@ class App(QMainWindow):
 
     def initProcessing(self):
         self.processingStartAfter = 500
-        self.processingCallInterval = 79
+        self.processingCallInterval = 30 if gv.esp != None else 79
         self.numberOfSamples = 19
         self.record = [[0]*12]*self.numberOfSamples;
         self.processingLastSample = [0]*12
         self.counter = self.numberOfSamples
         self.counterPrefix = 0
-        self.tresMin = 50
-        self.tresMax = 140
+        self.tresMin = gv.minThreshold if gv.esp != None else 50
+        self.tresMax = 1500 if gv.esp != None else 140
         self.recording = False
         self.keepingLastValues = 2
+        if (gv.esp != None): gv.esp.reset_input_buffer()
 
     def startProcessing(self):
         self.processingLastSample = self.getLastSampledValues()[0:]
@@ -211,17 +234,20 @@ class App(QMainWindow):
 
         arr = [0]*12
         mean = 0
+        lastSampledValues = self.getLastSampledValues()
         for i in range(len(arr)):
-            arr[i] = self.getLastSampledValues()[i] - self.processingLastSample[i]
+            arr[i] = lastSampledValues[i] - self.processingLastSample[i]
             mean += abs(arr[i])/len(arr)
         record.append(arr)
 
         self.record = record[0:]
-        self.processingLastSample = self.getLastSampledValues()[0:]
+        self.processingLastSample = lastSampledValues[0:]
 
-
+        txt = ("Recording... " if self.recording else "Amplitude des mouvements faciaux : ") + str(int(mean))
+        self.recordingLabel.setText(txt)
+        print(txt)
         if (mean>=self.tresMin and mean <= self.tresMax and not self.recording):
-            print(mean)
+            #print(mean)
             self.recording = True
 
         if (self.recording):
