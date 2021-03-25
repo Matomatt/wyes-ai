@@ -27,8 +27,11 @@ class Application(tk.Frame):
         for widget in self.winfo_children():
             widget.pack_forget()
 
-        gv.recordedMovements = loadData("dataset").tolist()
-        print("plop", len(gv.recordedMovements[0]))
+        try:
+            gv.recordedMovements = loadData("dataset").tolist()
+        except:
+            gv.recordedMovements = []
+            
         Menu(self)
 
     def testco(self):
