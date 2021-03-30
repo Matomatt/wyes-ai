@@ -10,57 +10,61 @@ class Regis(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        #self.ff = tk.Frame(self)
+        self.t1 = tk.Label(self)
+        self.br = tk.Button(self)
+        self.bregis = tk.Button(self)
+        self.deleteLastMovementButton = tk.Button(self)
         self.pack()
 
     def init(self, movementIndex, desiredNumberOfEssai):
+        # supression des widgets présents sur la fenêtre
+        for widget in self.winfo_children():
+            widget.pack_forget()
+        print("taille master register mouvement = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
         self.movementIndex = movementIndex
         self.desiredNumberOfEssai = desiredNumberOfEssai
         while (len(gv.recordedMovements) < movementIndex+1):
             gv.recordedMovements.append([])
 
-        # supression des widgets présents sur la fenêtre
-        for widget in self.winfo_children():
-            widget.pack_forget()
-
         # configuration du Header
-        self.t1 = tk.Label(self, text="Enregistrement du mouvement " + str(movementIndex+1), justify=tk.CENTER, font=('Consolas', 20))
-        self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-        self.br = tk.Button(self, text="<- Retour", command=self.retour)
-        self.br.configure(fg='lightgray', bg='#008080')
+
+        self.br.configure(fg='lightgray', bg='#008080', text="<---", command=self.retour)
+        self.br.pack(padx=10, pady=10)
+        self.br.place(x=0, y=0)
         self.t1.pack(side=tk.TOP)
-        self.br.pack(side=tk.TOP)
 
-        self.bregis = tk.Button(self, text="Nouvel essai : " + str(len(gv.recordedMovements[self.movementIndex])) + "/" + str(desiredNumberOfEssai), command=self.progression)
-        self.bregis.pack(side=tk.TOP, pady=20)
+        self.bregis.configure(text="Nouvel essai", command=self.progression, relief=tk.FLAT, bg='#196619', fg='white')
+        self.bregis.pack(pady=20)
+        self.bregis.place(x=int((self.master.winfo_width()/5)), y=50)
 
-        le = tk.Label(self, text="Essai :", justify=tk.LEFT, font=('Consolas', 10))
-        le.place(x=0, y=110)
+        self.deleteLastMovementButton.configure(fg='lightgray', bg='#b30000', text="Annuler", command=self.deleteLast, relief=tk.FLAT)
+        self.deleteLastMovementButton.pack(pady=60)
+        self.deleteLastMovementButton.place(x=int((self.master.winfo_width()/2)), y=50)
 
-        self.bagain = tk.Button(self, text="Recommencer ou supprimer le mouvement", command=self.recommencer)
+        self.bagain = tk.Button(self, text="X", command=self.recommencer, relief=tk.FLAT, font='Consolas 22 bold', fg='white')
         self.bagain.configure(fg='lightgray', bg='#b30000')
         self.bagain.pack(side=tk.BOTTOM, pady=10)
 
-        self.deleteLastMovementButton = tk.Button(self, text="Supprimer le dernier essai", command=self.deleteLast)
-        self.deleteLastMovementButton.configure(fg='lightgray', bg='#b30000')
-        self.deleteLastMovementButton.pack(side=tk.BOTTOM, pady=60)
-
         self.lf = tk.Label(self, text="", justify=tk.CENTER, font=('Consolas', 10))
-        self.lf.pack(side=tk.BOTTOM, pady=20)
+        self.lf.pack(side=tk.BOTTOM, pady=30)
 
         self.essaiButtons = []
         nbEssai = len(gv.recordedMovements[movementIndex])+1 if len(gv.recordedMovements[movementIndex])>=desiredNumberOfEssai else desiredNumberOfEssai
         for i in range(nbEssai):
             self.addEssaiButton(i)
             if (i<len(gv.recordedMovements[movementIndex])):
-                self.essaiButtons[i].configure(fg='black', bg='#009933', width=int(self.master.winfo_width()/(10*nbEssai)))
+               self.essaiButtons[i].configure(fg='black', bg='#009933', width=int(self.master.winfo_width()/(10*nbEssai)))
             elif (i==len(gv.recordedMovements[movementIndex])):
                 self.essaiButtons[i].configure(fg='black', bg='#d9d9d9', width=int(self.master.winfo_width()/(10*nbEssai)))
 
     def addEssaiButton(self, index):
-        l = tk.Label(self, text="n°"+str(index+1), justify=tk.CENTER, font=('Consolas', 10))
-        l.configure(fg='black', bg='#b3b3b3')
-        l.pack(side=tk.LEFT)
+        if self.movementIndex < 10:
+            nbEssai = 10
+        else:
+            nbEssai = self.movementIndex
+        l = tk.Label(self, text=str(index+1), justify=tk.CENTER, font=('Consolas', 10))
+        l.configure(fg='black', bg='#b3b3b3', width=10)
+        l.pack(side=tk.LEFT, pady=60)
         self.essaiButtons.append(l)
 
     def retour(self):
@@ -89,7 +93,7 @@ class Regis(tk.Frame):
                 self.addEssaiButton(len(self.essaiButtons))
 
             self.essaiButtons[len(gv.recordedMovements[self.movementIndex])].configure(fg='black', bg='#d9d9d9')
-            self.bregis.configure(text="Nouvel essai : " + str(len(gv.recordedMovements[self.movementIndex])) + "/" +str(self.desiredNumberOfEssai))
+            #self.bregis.configure(text="Nouvel essai : " + str(len(gv.recordedMovements[self.movementIndex])) + "/" +str(self.desiredNumberOfEssai))
 
             if len(gv.recordedMovements[self.movementIndex])>=self.desiredNumberOfEssai:
                 print("finito")

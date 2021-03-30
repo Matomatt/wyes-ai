@@ -13,20 +13,16 @@ class Menu(tk.Frame):
         self.menupr()
 
     def menupr(self):
-        self.t1 = tk.Label(self, text="Bienvenue sur le menu", justify=tk.CENTER, font=('Consolas', 20))
-        self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-        self.t1.pack(pady=20)
-
-        #if(Mouvements.nbMouv(self)==3):
-        self.b1 = tk.Button(self, text="Prendre le contrôle", width=int((self.master.winfo_width()/10)), height=45, command=self.cont)
+        print("taille master menu = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
+        self.b1 = tk.Button(self, text="Prendre le contrôle", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.cont)
         self.b1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        # else:
-        #     self.b1 = tk.Button(self, text="Prendre les contrôle", width=33, height=45)
-        #     self.b1.configure(fg='white', bg='#969696', overrelief=tk.FLAT, relief=tk.FLAT, cursor='X_cursor')
-        self.b2 = tk.Button(self, text="Mouvements définis", width=int((self.master.winfo_width()/10)), height=45, command=self.mouv)
+
+        self.b2 = tk.Button(self, text="Mouvements définis", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.mouv)
         self.b2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
-        self.b3 = tk.Button(self, text="Training", width=int((self.master.winfo_width()/10)), height=45, command=self.trainModel)
+
+        self.b3 = tk.Button(self, text="Training", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.trainModel)
         self.b3.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+
         self.b1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b3.pack(in_=self, side=tk.LEFT, padx=10, pady=10)

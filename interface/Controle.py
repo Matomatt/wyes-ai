@@ -15,18 +15,19 @@ class Controle(tk.Frame):
         self.cont()
 
     def cont(self):
+        print("taille master controle = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
         if self.co == True:
             # supression des widgets présents sur la fenêtre
             for widget in self.winfo_children():
                 widget.pack_forget()
 
             # configuration du Header
-            self.t1 = tk.Label(self, text="Fenêtre de contrôle", justify=tk.CENTER, font=('Consolas', 20))
-            self.t1.configure(fg='goldenrod', bg='#f0f0f0')
-            self.br = tk.Button(self, text="<- Retour", command=self.retour)
+            self.br = tk.Button(self, text="<---", command=self.retour)
             self.br.configure(fg='lightgray', bg='#008080')
+            self.br.pack(padx=10, pady=10)
+            self.br.place(x=0, y=0)
+            self.t1 = tk.Label(self)
             self.t1.pack(side=tk.TOP)
-            self.br.pack(side=tk.TOP)
 
             self.movementButtons = []
             for i in range(len(gv.recordedMovements)):

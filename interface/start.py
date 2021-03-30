@@ -9,6 +9,8 @@ def main(root):
     # root.wm_iconbitmap("Images/icone.ico")
 
     # objets fenêtre
+    root.update()
+    print("taille master start = " + str(root.winfo_width()) + "x" + str(root.winfo_height()))
     t1 = tk.Label(root, text="Bienvenue sur votre logiciel de contrôle", justify=tk.CENTER, font=('Consolas', 25))
     t1.configure(fg='goldenrod', bg='#f0f0f0')
     t2 = tk.Label(root, text="Cliquez sur n'importe quelle touche pour continuer", justify=tk.CENTER)
