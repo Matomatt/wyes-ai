@@ -39,7 +39,7 @@ class Mouvements(tk.Frame):
             self.mouvementButtons.append(tk.Button(self, text="Mouvement "+str(i+1), image=button, command=lambda index=i: self.buildMovementDataset(index)))
             self.items.append(self.can[i].create_image(int((self.master.winfo_width()/10-nbMov-1)/nbMov), 45, image=button))
             self.can[i].image = button
-            self.mouvementButtons[i].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center")
+            self.mouvementButtons[i].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center", font='Montserrat')
             self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=10, pady=10)
 
         # bouton ajouter mouvement
@@ -48,7 +48,7 @@ class Mouvements(tk.Frame):
         self.addMovementButton = tk.Button(self, text="+", image=photoplus, command=self.addMovement)
         self.item2 = self.can2.create_image(int((self.master.winfo_width()/10-nbMov-1)/nbMov), 48, image=photoplus)
         self.can2.image = photoplus
-        self.addMovementButton.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, font='Consolas 10 bold')
+        self.addMovementButton.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, font='Montserrat 10 bold')
         self.addMovementButton.pack(in_=self, side=tk.RIGHT, padx=10, pady=10)
 
     def retour(self):
@@ -75,6 +75,6 @@ class Mouvements(tk.Frame):
         self.items.append(
             self.can[newIndex].create_image(int((self.master.winfo_width()/10-newIndex-1)/newIndex), 45, image=imbutton))
         self.can[newIndex].image = imbutton
-        self.mouvementButtons[newIndex].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center")
+        self.mouvementButtons[newIndex].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center", font='Montserrat')
         self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=10, pady=10)
 

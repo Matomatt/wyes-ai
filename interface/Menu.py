@@ -1,7 +1,6 @@
 import tkinter as tk
 from Controle import Controle
 from Mouvements import Mouvements
-from MouvTraining import MouvTraining
 import global_variables as gv
 import TrainMouv as rm
 
@@ -20,7 +19,7 @@ class Menu(tk.Frame):
         self.item = self.can1.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
                                            image=photo)
         self.can1.image = photo
-        self.b1.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
+        self.b1.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center', font='Montserrat')
 
         photo2 = tk.PhotoImage(file="Images/button.png")
         self.can2 = tk.Canvas(self, bg='#f0f0f0')
@@ -28,7 +27,7 @@ class Menu(tk.Frame):
         self.item2 = self.can2.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
                                            image=photo2)
         self.can2.image = photo2
-        self.b2.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
+        self.b2.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center', font='Montserrat')
 
         photo3 = tk.PhotoImage(file="Images/button.png")
         self.can3 = tk.Canvas(self, bg='#f0f0f0')
@@ -36,7 +35,7 @@ class Menu(tk.Frame):
         self.item3 = self.can3.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
                                             image=photo3)
         self.can3.image = photo3
-        self.b3.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
+        self.b3.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center', font='Montserrat')
 
         self.b1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
