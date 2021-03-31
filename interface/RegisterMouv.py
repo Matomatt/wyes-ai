@@ -14,7 +14,7 @@ class Regis(tk.Frame):
         self.br = tk.Button(self)
         self.bregis = tk.Button(self)
         self.deleteLastMovementButton = tk.Button(self)
-        self.pack()
+        self.pack(fill=tk.BOTH)
 
     def init(self, movementIndex, desiredNumberOfEssai):
         # supression des widgets présents sur la fenêtre
@@ -27,22 +27,34 @@ class Regis(tk.Frame):
             gv.recordedMovements.append([])
 
         # configuration du Header
-
-        self.br.configure(fg='lightgray', bg='#008080', text="<---", command=self.retour)
+        self.t1 = tk.Label(self)
+        self.can1 = tk.Canvas(self, bg='#f0f0f0')
+        photo = tk.PhotoImage(file=r"Images/return.png", master=self)
+        self.br = tk.Button(self, text="<---", image=photo, command=self.retour, overrelief=tk.FLAT, relief=tk.FLAT)
+        self.item = self.can1.create_image(40, 20, image=photo)
+        self.can1.image = photo
         self.br.pack(padx=10, pady=10)
         self.br.place(x=0, y=0)
         self.t1.pack(side=tk.TOP)
 
         self.bregis.configure(text="Nouvel essai", command=self.progression, relief=tk.FLAT, bg='#196619', fg='white')
         self.bregis.pack(pady=20)
-        self.bregis.place(x=int((self.master.winfo_width()/5)), y=50)
+        self.bregis.place(x=int((self.master.winfo_width()/3.5)), y=50)
 
-        self.deleteLastMovementButton.configure(fg='lightgray', bg='#b30000', text="Annuler", command=self.deleteLast, relief=tk.FLAT)
+        self.can2 = tk.Canvas(self, bg='#f0f0f0')
+        photoagain = tk.PhotoImage(file=r"Images/again.png", master=self)
+        self.deleteLastMovementButton.configure(fg='lightgray', bg='#f0f0f0', text="Annuler", image=photoagain, command=self.deleteLast, relief=tk.FLAT)
+        self.item2 = self.can2.create_image(20, 20, image=photoagain)
+        self.can2.image = photoagain
         self.deleteLastMovementButton.pack(pady=60)
-        self.deleteLastMovementButton.place(x=int((self.master.winfo_width()/2)), y=50)
+        self.deleteLastMovementButton.place(x=int((self.master.winfo_width()/2.5)), y=50)
 
-        self.bagain = tk.Button(self, text="X", command=self.recommencer, relief=tk.FLAT, font='Consolas 22 bold', fg='white')
-        self.bagain.configure(fg='lightgray', bg='#b30000')
+        self.can3 = tk.Canvas(self, bg='#f0f0f0')
+        photostop = tk.PhotoImage(file=r"Images/annuler.png", master=self)
+        self.bagain = tk.Button(self, text="X", image=photostop, command=self.recommencer, relief=tk.FLAT, font='Consolas 22 bold', fg='white')
+        self.item3 = self.can2.create_image(50, 50, image=photostop)
+        self.can3.image = photostop
+        self.bagain.configure(fg='lightgray', bg='#f0f0f0')
         self.bagain.pack(side=tk.BOTTOM, pady=10)
 
         self.lf = tk.Label(self, text="", justify=tk.CENTER, font=('Consolas', 10))

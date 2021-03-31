@@ -14,7 +14,7 @@ class TrMouv(tk.Frame):
         self.master = master
         self.essai = 0
         self.nummouv = 0
-        self.pack()
+        self.pack(fill=tk.BOTH)
 
     def newmouv(self):
         print("taille master training = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
@@ -23,8 +23,11 @@ class TrMouv(tk.Frame):
             widget.pack_forget()
         # configuration du Header
         self.t1 = tk.Label(self)
-        self.br = tk.Button(self, text="<---", command=self.retour)
-        self.br.configure(fg='lightgray', bg='#008080')
+        self.can1 = tk.Canvas(self, bg='#f0f0f0')
+        photo = tk.PhotoImage(file=r"Images/return.png", master=self)
+        self.br = tk.Button(self, text="<---", image=photo, command=self.retour, overrelief=tk.FLAT, relief=tk.FLAT)
+        self.item = self.can1.create_image(40, 20, image=photo)
+        self.can1.image = photo
         self.br.pack(padx=10, pady=10)
         self.br.place(x=0, y=0)
         self.t1.pack(side=tk.TOP)
@@ -34,7 +37,7 @@ class TrMouv(tk.Frame):
         self.ex.pack(pady=20)
 
         self.btrain = tk.Button(self, text="Training", command=self.training, font='Consolas 22 bold')
-        self.btrain.configure(fg='lightgray', bg='#2d8659')
+        self.btrain.configure(fg='lightgray', bg='#2d8659', overrelief=tk.FLAT)
         self.btrain.pack(side=tk.TOP, pady=100)
 
 

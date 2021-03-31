@@ -9,19 +9,34 @@ class Menu(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.pack()
+        self.pack(fill=tk.BOTH)
         self.menupr()
 
     def menupr(self):
         print("taille master menu = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
-        self.b1 = tk.Button(self, text="Prendre le contrôle", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.cont)
-        self.b1.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+        photo = tk.PhotoImage(file="Images/button.png")
+        self.can1 = tk.Canvas(self, bg='#f0f0f0')
+        self.b1 = tk.Button(self, text="Prendre le contrôle", image=photo, command=self.cont)
+        self.item = self.can1.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
+                                           image=photo)
+        self.can1.image = photo
+        self.b1.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
 
-        self.b2 = tk.Button(self, text="Mouvements définis", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.mouv)
-        self.b2.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+        photo2 = tk.PhotoImage(file="Images/button.png")
+        self.can2 = tk.Canvas(self, bg='#f0f0f0')
+        self.b2 = tk.Button(self, text="Mouvements définis", image=photo2, command=self.mouv)
+        self.item2 = self.can2.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
+                                           image=photo2)
+        self.can2.image = photo2
+        self.b2.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
 
-        self.b3 = tk.Button(self, text="Training", width=int((self.master.winfo_width()/20)), height=int((self.master.winfo_width())), command=self.trainModel)
-        self.b3.configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT)
+        photo3 = tk.PhotoImage(file="Images/button.png")
+        self.can3 = tk.Canvas(self, bg='#f0f0f0')
+        self.b3 = tk.Button(self, text="Training", image=photo3, command=self.trainModel)
+        self.item3 = self.can3.create_image(int((self.master.winfo_width() / 20)), int((self.master.winfo_width())),
+                                            image=photo3)
+        self.can3.image = photo3
+        self.b3.configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound='center')
 
         self.b1.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
         self.b2.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
