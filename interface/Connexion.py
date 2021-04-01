@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 from Menu import Menu
 import global_variables as gv
 from CNN.payload import loadData
@@ -17,7 +18,7 @@ class Application(tk.Frame):
     def connex(self):
         # connexion aux lunettes
         print("taille master connexion = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
-        self.t1 = tk.Label(self, text="Connexion à vos lunettes impossible", justify=tk.CENTER, font=('Consolas', 20))
+        self.t1 = tk.Label(self, text="Connexion à vos lunettes impossible !", justify=tk.CENTER, font=('Montserrat', 20))
         self.t1.configure(fg='goldenrod', bg='#f0f0f0')
         self.t1.pack(pady=20)
 
@@ -44,6 +45,10 @@ class Application(tk.Frame):
             self.suiv()
         else:
             #Ajouter un bouton, pour dire connection foiré et permettre l'entrée au programme quand même
-            self.b1 = tk.Button(self, font=('Consolas', 20))
-            self.b1.configure(text="Connexion aux lunettes impossible\nCliquez pour accéder au logiciel malgré tout", bg="#cc0000", fg="white", command=self.suiv)
+            photo = ImageTk.PhotoImage(Image.open("Images/connect.png").resize((550, 90), Image.ANTIALIAS))
+            self.can = tk.Canvas(self, bg='#f0f0f0')
+            self.b1 = tk.Button(self, font=('Montserrat', 20), image=photo, compound='center')
+            self.item = self.can.create_image(550, 90, image=photo)
+            self.can.image = photo
+            self.b1.configure(text="Cliquez pour accéder au logiciel malgré tout", fg="white", command=self.suiv, relief=tk.FLAT, overrelief=tk.FLAT)
             self.b1.pack(pady=50)
