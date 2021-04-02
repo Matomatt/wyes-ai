@@ -81,6 +81,8 @@ class Mouvements(tk.Frame):
             self.can[i].image = imbutton
             self.mouvementButtons[i].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT,
                                                compound="center", font='Montserrat')
+            if newIndex>4:
+                self.mouvementButtons[i].configure(font="Montserrat "+str(20-2*newIndex))
             self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=5, pady=5)
 
         self.can.append(tk.Canvas(self, bg='#f0f0f0'))
@@ -90,6 +92,8 @@ class Mouvements(tk.Frame):
         self.can[newIndex].image = imbutton
         self.mouvementButtons[newIndex].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT,
                                            compound="center", font='Montserrat')
+        if newIndex>4:
+            self.mouvementButtons[newIndex].configure(font="Montserrat "+str(20-2*newIndex))
         self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=5, pady=5)
 
 
