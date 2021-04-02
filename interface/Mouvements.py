@@ -35,11 +35,11 @@ class Mouvements(tk.Frame):
         self.can = []
         self.items = []
         nbMov = len(gv.recordedMovements) if len(gv.recordedMovements)>3 else 3
-        button = ImageTk.PhotoImage(Image.open("Images/button.png").resize((170, 600), Image.ANTIALIAS))
+        button = ImageTk.PhotoImage(Image.open("Images/button.png").resize((int(950/4), 600), Image.ANTIALIAS))
         for i in range(nbMov):
             self.can.append(tk.Canvas(self, bg='#f0f0f0'))
             self.mouvementButtons.append(tk.Button(self, text="Mouvement "+str(i+1), image=button, command=lambda index=i: self.buildMovementDataset(index)))
-            self.items.append(self.can[i].create_image(170, 600, image=button))
+            self.items.append(self.can[i].create_image((950/4), 600, image=button))
             self.can[i].image = button
             self.mouvementButtons[i].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center", font='Montserrat')
             self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=5, pady=5)
@@ -68,16 +68,28 @@ class Mouvements(tk.Frame):
         tp.init(movementIndex, 10)
 
     def addMovement(self):
+        for mouvBut in self.mouvementButtons:
+            mouvBut.pack_forget()
         newIndex = len(self.mouvementButtons)
         imbutton = ImageTk.PhotoImage(Image.open("Images/button.png").resize(
-            (170, 600), Image.ANTIALIAS))
+            (int(950/(newIndex+2)-10), 600), Image.ANTIALIAS))
+        for i in range(newIndex):
+            self.can[i] = tk.Canvas(self, bg='#f0f0f0')
+            self.mouvementButtons[i] = tk.Button(self, text="Mouvement " + str(i + 1), image=imbutton,
+                                                   command=lambda index=i: self.buildMovementDataset(index))
+            self.items[i] = self.can[i].create_image(int(950/(newIndex+1)), 600, image=imbutton)
+            self.can[i].image = imbutton
+            self.mouvementButtons[i].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT,
+                                               compound="center", font='Montserrat')
+            self.mouvementButtons[i].pack(in_=self, side=tk.LEFT, padx=5, pady=5)
+
         self.can.append(tk.Canvas(self, bg='#f0f0f0'))
-        button = tk.Button(self, text="Mouvement "+str(newIndex+1), image=imbutton, command=lambda index=newIndex: self.buildMovementDataset(index))
-        self.mouvementButtons.append(button)
-        self.items.append(
-            self.can[newIndex].create_image(170, 600, image=imbutton))
+        self.mouvementButtons.append(tk.Button(self, text="Mouvement " + str(newIndex + 1), image=imbutton,
+                                               command=lambda index=i: self.buildMovementDataset(index)))
+        self.items.append(self.can[newIndex].create_image(int(950/(newIndex+1)), 600, image=imbutton))
         self.can[newIndex].image = imbutton
-        self.mouvementButtons[newIndex].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT, compound="center", font='Montserrat')
+        self.mouvementButtons[newIndex].configure(fg='white', bg='#f0f0f0', overrelief=tk.FLAT, relief=tk.FLAT,
+                                           compound="center", font='Montserrat')
         self.mouvementButtons[newIndex].pack(in_=self, side=tk.LEFT, padx=5, pady=5)
 
 
