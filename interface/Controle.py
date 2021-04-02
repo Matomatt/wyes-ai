@@ -35,7 +35,7 @@ class Controle(tk.Frame):
 
             self.movementButtons = []
             for i in range(len(gv.recordedMovements)):
-                button = tk.Button(self, text="Mouvement "+str(i+1), width=int((self.master.winfo_width()/10-len(gv.recordedMovements)-1)/len(gv.recordedMovements)), height=10, font='Montserrat')
+                button = tk.Button(self, text="Mouvement "+str(i+1), width=int((self.master.winfo_width()/10-len(gv.recordedMovements)-1)/len(gv.recordedMovements)), height=10)
                 button.pack(in_=self, side=tk.LEFT, padx=10, pady=10)
                 self.movementButtons.append(button)
 
