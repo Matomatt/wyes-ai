@@ -1,10 +1,12 @@
 import tkinter as tk
 from Connexion import Application
+from PIL import Image, ImageTk
+
 
 
 def main(root):
     # apparence fenêtre
-    root.configure(bg='#f0f0f0')
+    root.configure(bg='white')
     root.geometry("1000x650")
     # root.wm_iconbitmap("Images/icone.ico")
 
@@ -12,21 +14,21 @@ def main(root):
     root.update()
     print("taille master start = " + str(root.winfo_width()) + "x" + str(root.winfo_height()))
     t1 = tk.Label(root, text="Bienvenue sur votre logiciel de contrôle", justify=tk.CENTER, font=('Montserrat', 25))
-    t1.configure(fg='goldenrod', bg='#f0f0f0')
+    t1.configure(fg='goldenrod', bg='white')
     t2 = tk.Label(root, text="Cliquez sur n'importe quelle touche pour continuer", justify=tk.CENTER)
-    t2.configure(fg='goldenrod', bg='#f0f0f0', font='Montserrat')
+    t2.configure(fg='goldenrod', bg='white', font='Montserrat')
     t1.pack(pady=120)
     t2.pack()
 
     # affichages logos
-    root.can1 = tk.Canvas(root, bg='#f0f0f0')
+    root.can1 = tk.Canvas(root, bg='white', highlightthickness=0)
     wyes = tk.PhotoImage(file='Images/wyes.png')
     root.item = root.can1.create_image(100, 100, image=wyes)
     root.can1.image = wyes
     root.can1.pack()
     root.can1.place(x=200, y=400)
 
-    root.can2 = tk.Canvas(root, bg='#f0f0f0')
+    root.can2 = tk.Canvas(root, bg='white', highlightthickness=0)
     ece = tk.PhotoImage(file='Images/ece.png')
     root.item2 = root.can2.create_image(150, 100, image=ece)
     root.can2.image = ece

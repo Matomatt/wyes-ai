@@ -1,7 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
 import Mouvements as mn
-import time
 import live_emulation as le
 import global_variables as gv
 
@@ -10,6 +8,7 @@ class Regis(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
+        self.configure(bg='white')
         self.t1 = tk.Label(self)
         self.br = tk.Button(self)
         self.bregis = tk.Button(self)
@@ -28,7 +27,7 @@ class Regis(tk.Frame):
 
         # configuration du Header
         self.t1 = tk.Label(self)
-        self.can1 = tk.Canvas(self, bg='#f0f0f0')
+        self.can1 = tk.Canvas(self, bg='white', highlightthickness=0)
         photo = tk.PhotoImage(file=r"Images/return.png", master=self)
         self.br = tk.Button(self, text="<---", image=photo, command=self.retour, overrelief=tk.FLAT, relief=tk.FLAT)
         self.item = self.can1.create_image(40, 20, image=photo)
@@ -41,20 +40,20 @@ class Regis(tk.Frame):
         self.bregis.pack(pady=20)
         self.bregis.place(x=int((self.master.winfo_width()/3.5)), y=50)
 
-        self.can2 = tk.Canvas(self, bg='#f0f0f0')
+        self.can2 = tk.Canvas(self, bg='white')
         photoagain = tk.PhotoImage(file=r"Images/again.png", master=self)
-        self.deleteLastMovementButton.configure(fg='lightgray', bg='#f0f0f0', text="Annuler", image=photoagain, command=self.deleteLast, relief=tk.FLAT)
+        self.deleteLastMovementButton.configure(fg='lightgray', bg='white', text="Annuler", image=photoagain, command=self.deleteLast, relief=tk.FLAT)
         self.item2 = self.can2.create_image(20, 20, image=photoagain)
         self.can2.image = photoagain
         self.deleteLastMovementButton.pack(pady=60)
         self.deleteLastMovementButton.place(x=int((self.master.winfo_width()/2.5)), y=50)
 
-        self.can3 = tk.Canvas(self, bg='#f0f0f0')
+        self.can3 = tk.Canvas(self, bg='white')
         photostop = tk.PhotoImage(file=r"Images/annuler.png", master=self)
         self.bagain = tk.Button(self, text="X", image=photostop, command=self.recommencer, relief=tk.FLAT, font='Consolas 22 bold', fg='white')
         self.item3 = self.can2.create_image(50, 50, image=photostop)
         self.can3.image = photostop
-        self.bagain.configure(fg='lightgray', bg='#f0f0f0')
+        self.bagain.configure(fg='lightgray', bg='white')
         self.bagain.pack(side=tk.BOTTOM, pady=10)
 
         self.lf = tk.Label(self, text="", justify=tk.CENTER, font=('Consolas', 10))
@@ -65,7 +64,7 @@ class Regis(tk.Frame):
         for i in range(nbEssai):
             self.addEssaiButton(i)
             if (i<len(gv.recordedMovements[movementIndex])):
-               self.essaiButtons[i].configure(fg='black', bg='#009933', width=int(self.master.winfo_width()/(10*nbEssai)))
+               self.essaiButtons[i].configure(fg='white', bg='#fe9d27', width=int(self.master.winfo_width()/(10*nbEssai)))
             elif (i==len(gv.recordedMovements[movementIndex])):
                 self.essaiButtons[i].configure(fg='black', bg='#d9d9d9', width=int(self.master.winfo_width()/(10*nbEssai)))
 

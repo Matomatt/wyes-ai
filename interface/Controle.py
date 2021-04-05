@@ -11,6 +11,7 @@ class Controle(tk.Frame):
         super().__init__(master)
         self.co = True
         self.master = master
+        self.configure(bg='white')
         self.pack()
         self.cont()
 
@@ -22,8 +23,8 @@ class Controle(tk.Frame):
                 widget.pack_forget()
 
             # configuration du Header
-            self.t1 = tk.Label(self)
-            self.can1 = tk.Canvas(self, bg='#f0f0f0')
+            self.t1 = tk.Label(self, bg='white')
+            self.can1 = tk.Canvas(self, bg='white', highlightthickness=0)
             photo = tk.PhotoImage(file=r"Images/return.png", master=self)
             self.br = tk.Button(self, text="<---", image=photo, command=self.retour, overrelief=tk.FLAT,
                                 relief=tk.FLAT)
@@ -61,7 +62,7 @@ class Controle(tk.Frame):
 
         for bt in self.movementButtons:
             bt.configure(fg='white', bg='#969696', activebackground='#969696', overrelief=tk.FLAT, relief=tk.FLAT, font='Montserrat')
-        self.movementButtons[mouv].configure(fg='white', bg='#008080', activebackground='#009999', overrelief=tk.FLAT, relief=tk.FLAT, font='Montserrat')
+        self.movementButtons[mouv].configure(fg='white', bg='goldenrod', activebackground='golenrod', overrelief=tk.FLAT, relief=tk.FLAT, font='Montserrat')
 
         if self.co==True:
             self.after(100, self.predictMouv)

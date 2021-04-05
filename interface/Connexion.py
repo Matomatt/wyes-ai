@@ -11,6 +11,7 @@ class Application(tk.Frame):
         # initialisation de la nouvelle fenêtre
         super().__init__(master)
         self.master = master
+        self.configure(bg='white')
         self.pack()
         self.connex()
         self.testco()
@@ -19,7 +20,7 @@ class Application(tk.Frame):
         # connexion aux lunettes
         print("taille master connexion = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
         self.t1 = tk.Label(self, text="Connexion à vos lunettes impossible !", justify=tk.CENTER, font=('Montserrat', 20))
-        self.t1.configure(fg='goldenrod', bg='#f0f0f0')
+        self.t1.configure(fg='goldenrod', bg='white')
         self.t1.pack(pady=20)
 
     def suiv(self):
@@ -46,7 +47,7 @@ class Application(tk.Frame):
         else:
             #Ajouter un bouton, pour dire connection foiré et permettre l'entrée au programme quand même
             photo = ImageTk.PhotoImage(Image.open("Images/connect.png").resize((550, 90), Image.ANTIALIAS))
-            self.can = tk.Canvas(self, bg='#f0f0f0')
+            self.can = tk.Canvas(self, bg='white', highlightthickness=0)
             self.b1 = tk.Button(self, font=('Montserrat', 20), image=photo, compound='center')
             self.item = self.can.create_image(550, 90, image=photo)
             self.can.image = photo
