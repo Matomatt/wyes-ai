@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import Menu as mn
 import RegisterMouv as rm
 import global_variables as gv
+import TrainMouv as train
 
 
 class Mouvements(tk.Frame):
@@ -56,6 +57,7 @@ class Mouvements(tk.Frame):
 
     def retour(self):
         # supression des widgets présents sur la fenêtre
+        train.TrMouv()
         for widget in self.winfo_children():
             widget.pack_forget()
         mn.Menu(self)

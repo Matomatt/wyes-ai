@@ -12,12 +12,10 @@ class TrMouv(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.essai = 0
-        self.nummouv = 0
-        self.pack(fill=tk.BOTH)
+        self.training()
+        self.pack()
 
     def newmouv(self):
-        print("taille master training = " + str(self.master.winfo_width()) + "x" + str(self.master.winfo_height()))
         # supression des widgets présents sur la fenêtre
         for widget in self.winfo_children():
             widget.pack_forget()
@@ -93,4 +91,3 @@ class TrMouv(tk.Frame):
         model = createModel(X_train, Y_train)
         gv.AImodel = train(model, X_train, Y_train, X_test, Y_test)
 
-        self.newmouv()
